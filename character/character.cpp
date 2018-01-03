@@ -691,7 +691,7 @@ void character::check_charging_colors(bool always_charged)
 
 st_position character::get_attack_position()
 {
-    get_attack_position(state.direction);
+    return get_attack_position(state.direction);
 }
 
 
@@ -1370,9 +1370,15 @@ bool character::is_on_screen()
 
     scroll = gameControl.get_current_map_obj()->getMapScrolling();
 
-    // is on screen
+    // is on screen plus a bit more on both sides
     if (abs((float)position.x+frameSize.width*2) >= scroll.x && abs((float)position.x-frameSize.width*2) <= scroll.x+RES_W) {
         return true;
+    }
+
+
+    // regular enemies work only on a limited screen
+    if (is_stage_boss() == false) {
+        return false;
     }
 
     // is on left of the screen
@@ -1402,6 +1408,7 @@ bool character::is_on_screen()
             }
         }
         if (found_lock == false) {
+            std::cout << "CHAR::is_on_screen[" << name << "], x[" << position.x << "], map_point_start[" << map_point_start << "], map_point_end[" << map_point_end << "]" << std::endl;
             return true;
         }
         if (name == "Dynamite Bot") std::cout << ">>>> character::is_on_screen - right <<<<" << std::endl;
@@ -2345,7 +2352,13 @@ st_rectangle character::get_hitbox(int anim_type)
         w = col_rect.w - 4;
         h = col_rect.h;
         if (w <= 0 || h <= 0) {
+            CURRENT_FILE_FORMAT::file_npc_v3_1_2* npc_ref = GameMediator::get_instance()->get_enemy(_number);
             std::cout << "#### CHAR::GET_HITBOX name[" << name << "], x[" << x << "], y[" << y << "], w[" << w << "], h[" << h << "], animation_state[" << anim_n << "], animation_type[" << anim_type << "]" << std::endl;
+            if (GameMediator::get_instance()->get_enemy(_number)->sprites[anim_type][anim_n].used == true) {
+                std::cout << "###### using sprite collision rect" << std::endl;
+            } else {
+                std::cout << "###### using npc basic info for rect" << std::endl;
+            }
         }
     }
 
@@ -2361,17 +2374,21 @@ st_rectangle character::get_vulnerable_area(int anim_type)
     float w = frameSize.width;
     float h = frameSize.height;
 
+    if (vulnerable_area_box.x == 0 && vulnerable_area_box.y == 0 && vulnerable_area_box.w == frameSize.width && vulnerable_area_box.h == frameSize.height) {
+        std::cout << "#### DEFAULT hitbox" << std::endl;
+        return st_rectangle(0, 0, 0, 0);
+    }
+
     if (vulnerable_area_box.w != 0 && vulnerable_area_box.h != 0) { // use vulnerable area
-        std::cout << "CHAR::get_vulnerable_area[" << name << "] - EXISTS - w[" << vulnerable_area_box.w << "], h[" << vulnerable_area_box.h << "]" << std::endl;
+        std::cout << "CHAR::get_vulnerable_area[" << name << "] - EXISTS - pos[" << position.x << ", " << position.y << "], x[" << vulnerable_area_box.x << "], w[" << vulnerable_area_box.w << "], h[" << vulnerable_area_box.h << "]" << std::endl;
         if (state.direction == ANIM_DIRECTION_LEFT) {
-            x += vulnerable_area_box.x - 2;
+            x += vulnerable_area_box.x;
         } else {
             std::cout << "%%%%%%% RIGHT - pos.x[" << position.x << "], vulnerable_area_box.x[" << vulnerable_area_box.x << "], hitbox.x[" << x << "]" << std::endl;
-            //x = position.x - (frameSize.width - vulnerable_area_box.w) + vulnerable_area_box.x + 2;
-            x = position.x + frameSize.width - vulnerable_area_box.w + 2;
+            x = position.x + frameSize.width - vulnerable_area_box.w;
         }
         y += vulnerable_area_box.y;
-        w = vulnerable_area_box.w - 2;
+        w = vulnerable_area_box.w;
         h = vulnerable_area_box.h;
         //if (state.animation_type == ANIM_TYPE_SLIDE) { std::cout << "#### CHAR::get_vulnerable_area [" << name << "][" << x << "," << y << "," << w << "," << h << "]" << std::endl; }
         return st_rectangle(x, y, w, h);

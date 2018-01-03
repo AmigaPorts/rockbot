@@ -191,17 +191,17 @@ void artificial_inteligence::define_ai_next_step()
         bool found_chance = false;
         int chance_sum = 0;
         for (int i=0; i<AI_MAX_STATES; i++) {
-            //std::cout << "[" << i << "].chance: " << GameMediator::get_instance()->ai_list.at(_number).states[i].chance << ", chance_sum: " << chance_sum << std::endl;
+            //std::cout << "[" << name << "][" << i << "].chance: " << GameMediator::get_instance()->ai_list.at(_number).states[i].chance << ", chance_sum: " << chance_sum << std::endl;
             chance_sum += GameMediator::get_instance()->ai_list.at(_number).states[i].chance;
             if (rand_n < chance_sum) {
-                //std::cout << "AI::define_ai_next_step - FOUND CHANCE at [" << i << "]" << std::endl;
+                //std::cout << "AI::define_ai_next_step[" << name << "] - FOUND CHANCE at [" << i << "]" << std::endl;
                 _ai_chain_n = i;
                 found_chance = true;
                 break;
             }
         }
         if (found_chance == false) {
-            std::cout << "AI::define_ai_next_step - no chance found, use ZERO as default" << std::endl;
+            std::cout << "AI::define_ai_next_step[" << name << "] - no chance found, use ZERO as default" << std::endl;
             _ai_chain_n = 0;
         }
     } else {
@@ -1274,7 +1274,6 @@ void artificial_inteligence::execute_ai_step_fly()
         }
 
         set_animation_type(ANIM_TYPE_WALK_AIR);
-        //set_animation_type(ANIM_TYPE_WALK);
 		_ai_state.sub_status = IA_ACTION_STATE_EXECUTING;
 
     // EXECUTION
@@ -1429,21 +1428,18 @@ void artificial_inteligence::execute_ai_step_fly()
             struct_player_dist dist_players = dist_npc_players();
 
             _dest_point.x = dist_players.pObj->getPosition().x;
-
-
-            //std::cout << "AI_ACTION_FLY_OPTION_TO_PLAYER_X - x: " << position.x << ", p.x: " << dist_players.pObj->getPosition().x << std::endl;
-
             if (dist_players.pObj->getPosition().x < position.x) {
                 state.direction = ANIM_DIRECTION_LEFT;
             } else {
                 state.direction = ANIM_DIRECTION_RIGHT;
             }
 
+            //std::cout << "AI_ACTION_FLY_OPTION_TO_PLAYER_X - is_ghost[" << is_ghost << "], x: " << position.x << ", p.x: " << dist_players.pObj->getPosition().x << std::endl;
             if (abs(dist_players.pObj->getPosition().x - position.x) < TILESIZE/2) {
-                std::cout << "AI_ACTION_FLY_OPTION_TO_PLAYER_X::FINISH #1" << std::endl;
+                //std::cout << "AI_ACTION_FLY_OPTION_TO_PLAYER_X::FINISH #1" << std::endl;
                 _ai_state.sub_status = IA_ACTION_STATE_FINISHED;
             } else if (move_to_point(_dest_point, move_speed, 0, is_ghost) == true) {
-                std::cout << "AI_ACTION_FLY_OPTION_TO_PLAYER_X::FINISH #2" << std::endl;
+                //std::cout << "AI_ACTION_FLY_OPTION_TO_PLAYER_X::FINISH #2" << std::endl;
                 _ai_state.sub_status = IA_ACTION_STATE_FINISHED;
             }
         } else if (_parameter == AI_ACTION_FLY_OPTION_TO_PLAYER_Y) {
@@ -1618,11 +1614,14 @@ void artificial_inteligence::execute_ai_step_dash()
 void artificial_inteligence::execute_ai_step_change_animation_type()
 {
     if (_ai_state.sub_status == IA_ACTION_STATE_INITIAL) {
+        //std::cout << "$$$$$$$$ execute_ai_step_change_animation_type[" << name << "][INIT]" << std::endl;
         set_animation_type(static_cast<ANIM_TYPE>(_parameter));
         _ai_state.sub_status = IA_ACTION_STATE_EXECUTING;
     } else if (_ai_state.sub_status == IA_ACTION_STATE_EXECUTING) {
+        //std::cout << "$$$$$$$$ execute_ai_step_change_animation_type[" << name << "][EXEC]" << std::endl;
         if (_is_last_frame == true) {
             _ai_state.sub_status = IA_ACTION_STATE_FINISHED;
+            //std::cout << "$$$$$$$$ execute_ai_step_change_animation_type[" << name << "][FINISH]" << std::endl;
         }
     }
 }
@@ -1773,7 +1772,7 @@ can_move_struct artificial_inteligence::check_can_move_to_point(st_float_positio
     can_move_x = test_change_position(xinc, 0);
     can_move_y = test_change_position(0, yinc);
 
-    if (name == "SHIELD GROUND") std::cout << ">> AI::move_to_point - can_move_x: " << can_move_x << ", can_move_y: " << can_move_y << std::endl;
+    //if (name == "SHIELD GROUND") std::cout << ">> AI::move_to_point - can_move_x: " << can_move_x << ", can_move_y: " << can_move_y << std::endl;
 
     if (xinc == 0 && yinc == 0) {
         return can_move_struct(0, 0, false, false, CAN_MOVE_LEAVE_TRUE);

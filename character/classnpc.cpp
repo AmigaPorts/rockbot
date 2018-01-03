@@ -45,11 +45,7 @@ classnpc::classnpc() : graphic_filename(), first_run(true), _is_player_friend(fa
     _initialized = false;
     _screen_blinked = false;
     _parent_id = -1;
-
-    // can't have ghosts that don't fly
-    if (is_ghost == true && can_fly == false) {
-        is_ghost = false;
-    }
+    is_ghost = false;
 }
 
 
@@ -68,6 +64,7 @@ classnpc::classnpc(int stage_id, int map_id, int main_id, int id) : _is_player_f
         std::cout << ">>>>>>>>>>>>> bg_pos.x[" << GameMediator::get_instance()->get_enemy(_number)->sprites_pos_bg.x << "]" << std::endl;
     }
     start_point.y = (GameMediator::get_instance()->map_npc_data[id].start_point.y * TILESIZE) + GameMediator::get_instance()->get_enemy(_number)->sprites_pos_bg.y;
+    static_bg_pos = st_position(GameMediator::get_instance()->map_npc_data[id].start_point.x * TILESIZE, GameMediator::get_instance()->map_npc_data[id].start_point.y * TILESIZE);
     position.x = start_point.x;
     position.y = start_point.y;
     if (name == "OCTOPUS") {
@@ -78,9 +75,10 @@ classnpc::classnpc(int stage_id, int map_id, int main_id, int id) : _is_player_f
     _screen_blinked = false;
     _parent_id = -1;
 
-    // can't have ghosts that don't fly
-    if (is_ghost == true && can_fly == false) {
-        is_ghost = false;
+    is_ghost = false;
+
+    if (is_static()) {
+        can_fly = true;
     }
 }
 
@@ -92,6 +90,7 @@ classnpc::classnpc(int stage_id, int map_id, int main_id, st_position npc_pos, s
     state.direction = direction;
     start_point.x = npc_pos.x;
     start_point.y = npc_pos.y;
+    static_bg_pos = st_position(npc_pos.x * TILESIZE, npc_pos.y * TILESIZE);
     position.x = npc_pos.x;
     position.y = npc_pos.y;
     _is_spawn = true;
@@ -99,9 +98,9 @@ classnpc::classnpc(int stage_id, int map_id, int main_id, st_position npc_pos, s
     _screen_blinked = false;
     _parent_id = -1;
 
-    // can't have ghosts that don't fly
-    if (is_ghost == true && can_fly == false) {
-        is_ghost = false;
+    is_ghost = false;
+    if (is_static()) {
+        can_fly = true;
     }
 }
 
@@ -122,10 +121,7 @@ classnpc::classnpc(std::string set_name) : graphic_filename(), first_run(true), 
     _screen_blinked = false;
     _parent_id = -1;
 
-    // can't have ghosts that don't fly
-    if (is_ghost == true && can_fly == false) {
-        is_ghost = false;
-    }
+    is_ghost = false;
 }
 
 
@@ -261,6 +257,10 @@ void classnpc::build_basic_npc(int stage_id, int map_id, int main_id)
     if (is_ghost == true && can_fly == false) {
         is_ghost = false;
     }
+    if (is_static()) {
+        can_fly = true;
+    }
+
 
     vulnerable_area_box = GameMediator::get_instance()->get_enemy(_number)->vulnerable_area;
 }
@@ -295,6 +295,11 @@ void classnpc::reset_position()
 st_position classnpc::get_start_position()
 {
     return st_position(start_point.x, start_point.y);
+}
+
+st_position classnpc::get_bg_position()
+{
+    return static_bg_pos;
 }
 
 
@@ -417,9 +422,6 @@ void classnpc::boss_move()
         set_animation_type(ANIM_TYPE_TELEPORT);
         gameControl.map_present_boss(is_stage_boss(), is_static_boss);
         // set temp-background in map
-        if (is_static_boss == true) {
-            gameControl.set_map_enemy_static_background(FILEPATH + std::string("images/sprites/enemies/backgrounds/") + std::string(GameMediator::get_instance()->get_enemy(_number)->bg_graphic_filename));
-        }
         return;
     } else if (_initialized == 1 && _is_boss == true && is_static_boss == false) {
 #ifdef ANDROID
@@ -451,6 +453,7 @@ void classnpc::copy(classnpc *from)
 
 	facing = from->facing;
 	start_point = from->start_point;
+    static_bg_pos = from->static_bg_pos;
 
 	walk_range = from->walk_range;
 	graphic_filename = from->graphic_filename;
@@ -658,7 +661,9 @@ void classnpc::set_is_boss(bool set_boss)
         if (is_static() == false) {
             _ai_state.initial_position.y = -(frameSize.height+1);
             position.y = _ai_state.initial_position.y;
+            std::cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
         } else {
+            std::cout << "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" << std::endl;
             position.y = start_point.y;
         }
         hitPoints.total = BOSS_INITIAL_HP;
@@ -678,8 +683,12 @@ void classnpc::set_stage_boss(bool boss_flag)
     _is_stage_boss = boss_flag;
     if (boss_flag == true) {
         _screen_blinked = false;
-        _ai_state.initial_position.y = -(frameSize.height+1);
-        position.y = _ai_state.initial_position.y;
+        if (is_static() == false) {
+            _ai_state.initial_position.y = -(frameSize.height+1);
+            position.y = _ai_state.initial_position.y;
+        } else {
+            position.y = start_point.y;
+        }
         hitPoints.total = BOSS_INITIAL_HP;
         hitPoints.current = hitPoints.total;
         hit_duration = BOSS_HIT_DURATION;

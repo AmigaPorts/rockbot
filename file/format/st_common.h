@@ -187,6 +187,21 @@ struct st_rectangle {
         }
         return false;
     }
+    bool operator==(const st_rectangle &comp_pt) const
+    {
+        if (x == comp_pt.x && y == comp_pt.y && w == comp_pt.w && h == comp_pt.h) {
+            return true;
+        }
+        return false;
+    }
+    bool operator!=(const st_rectangle &comp_pt) const
+    {
+        if (x != comp_pt.x || y != comp_pt.y || w != comp_pt.w && h != comp_pt.h) {
+            return true;
+        }
+        return false;
+    }
+
 };
 
 struct st_color {
@@ -501,11 +516,11 @@ struct graphicsLib_gSurface {
 
         bool is_null() {
             if (width <= 0 || height <= 0) {
-                std::cout << "GSURFACE - invalid size[" << width << "][" << height << "]" << std::endl;
+                //std::cout << "GSURFACE - invalid size[" << width << "][" << height << "]" << std::endl;
                 return true;
             }
             if (gSurface == NULL) {
-                std::cout << "GSURFACE - SDL-Surface is NULL" << std::endl;
+                //std::cout << "GSURFACE - SDL-Surface is NULL" << std::endl;
                 return true;
             }
         }
