@@ -3,7 +3,7 @@
 
 #include "defines.h"
 #include "graphicslib.h"
-#include "scenes/game_menu.h"
+//#include "scenes/game_menu.h"
 #include "file/fio_scenes.h"
 
 
@@ -60,7 +60,7 @@ private:
 
     CURRENT_FILE_FORMAT::fio_scenes fio_scn;
     std::map<Uint8, Uint8> game_scenes_map;
-    game_menu menu;
+//    game_menu menu;
 
 
 };

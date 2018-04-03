@@ -2,7 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <cmath>
+#include <math.h>
 #include <cstdlib>
 
 

@@ -444,9 +444,9 @@ struct graphicsLib_gSurface {
         void set_surface(SDL_Surface *surface) {
             // free old surface memory
             if (gSurface != NULL) {
-                try {
+                //try {
                     SDL_FreeSurface(gSurface);
-                } catch (std::exception e) {}
+                //} catch (std::exception e) {}
             }
             if (surface != NULL) {
                 gSurface = surface;

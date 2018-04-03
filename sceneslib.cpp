@@ -227,7 +227,7 @@ void scenesLib::main_screen()
                 main_picker.draw();
             }
         } else if (picked_n == 2) { // CONFIG //
-            menu.show_main_config(0, false);
+//            menu.show_main_config(0, false);
 			draw_main();
 			main_picker.draw();
         } else if (picked_n == 3) { // MANUAL //

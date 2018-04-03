@@ -754,7 +754,7 @@ namespace format_v4 {
 
             //std::cout << ">>>>>>>>> entry->d_name: " << entry->d_name << std::endl;
 
-            std::string dir_name = std::string(entry->d_name);
+            std::string dir_name = std::string((char*)entry->d_name);
             if (dir_name != "." && dir_name != "..") {
                 DIR *child_dir;
                 std::string child_dir_path = filename + std::string("/") + dir_name;

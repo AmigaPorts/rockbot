@@ -1,4 +1,4 @@
-#include <cmath>
+#include <math.h>
 #include <iostream>
 #include "trajectory_parabola.h"
 

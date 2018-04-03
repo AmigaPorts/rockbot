@@ -1,7 +1,11 @@
 #include "artificial_inteligence.h"
 #include "classmap.h"
+//#ifdef __AMIGA__
+//#include <math.h>
+//#else
 #include <cmath>
-#include <cstdlib>
+//#endif
+#include <stdlib.h>
 #include <algorithm>
 #include "character/classplayer.h"
 

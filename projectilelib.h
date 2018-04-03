@@ -116,7 +116,7 @@ private:
 
     bool diagonal_flag; // used to control diagonal shot angle
     Uint8 _max_frames; // number of frames for the projectile
-    double angle;
+    float angle;
     short int radius;
 
 	// used for quake effect

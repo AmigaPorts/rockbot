@@ -17,7 +17,9 @@ void exception_manager::throw_param_exception(std::string prefix, std::string pa
     std::string backtrace = get_backtrace();
     char error_msg[512+backtrace.size()];
     sprintf(error_msg, "Exception: Invalid parameter [%s] - value[%s]\nBacktrace:\n[%s]", prefix.c_str(), param.c_str(), backtrace.c_str());
+#ifndef __AMIGA__
     throw std::invalid_argument(error_msg);
+#endif
 }
 
 void exception_manager::throw_file_not_found_exception(std::string prefix, std::string param)
@@ -25,7 +27,9 @@ void exception_manager::throw_file_not_found_exception(std::string prefix, std::
     std::string backtrace = get_backtrace();
     char error_msg[512+backtrace.size()];
     sprintf(error_msg, "Exception: file not found[%s] - file[%s]\nBacktrace:\n[%s]", prefix.c_str(), param.c_str(), backtrace.c_str());
+#ifndef __AMIGA__
     throw std::invalid_argument(error_msg);
+#endif
 }
 
 void exception_manager::throw_general_exception(std::string prefix, std::string param)
@@ -33,7 +37,9 @@ void exception_manager::throw_general_exception(std::string prefix, std::string 
     std::string backtrace = get_backtrace();
     char error_msg[512+backtrace.size()];
     sprintf(error_msg, "Exception: runtime error[%s] - code[%s]\nBacktrace:\n[%s]", prefix.c_str(), param.c_str(), backtrace.c_str());
+#ifndef __AMIGA__
     throw std::runtime_error(error_msg);
+#endif
 }
 
 #ifdef ANDROID

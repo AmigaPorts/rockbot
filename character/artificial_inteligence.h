@@ -2,7 +2,7 @@
 #define ARTIFICIAL_INTELIGENCE_H
 
 #include "character.h"
-#include <cmath>
+#include <math.h>
 
 
 /**

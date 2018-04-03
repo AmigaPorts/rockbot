@@ -1870,7 +1870,8 @@ void game::object_teleport_boss(st_position dest_pos, Uint8 dest_map, Uint8 tele
 
 bool game::show_config(short finished_stage)
 {
-    game_menu menu;
+//    game_menu menu;
+/*
     if (menu.show_main_config(finished_stage, true) == 1) {
         input.clean();
         timer.delay(50);
@@ -1878,6 +1879,7 @@ bool game::show_config(short finished_stage)
         leave_stage();
         return true;
     }
+*/
     return false;
 }
 

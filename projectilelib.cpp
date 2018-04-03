@@ -1,11 +1,14 @@
-#include <cstdlib>
+#include <stdlib.h>
 #include "projectilelib.h"
 #include "timerlib.h"
 #include "classmap.h"
 #include "character/character.h"
 #include "collision_detection.h"
+#ifdef __AMIGA__
+#include <math.h>
+#else
 #include <cmath>
-
+#endif
 #include "soundlib.h"
 extern soundLib soundManager;
 
@@ -787,7 +790,7 @@ st_size projectile::move() {
         }
 
         //position.y += 0.5;
-        float rad_angle = (angle * 3.1459)/180;
+        float rad_angle = angle * M_PI/180.00;
         position.x = _speed_x*cos(rad_angle) + position0.x;
         position.y = _speed_x*sin(rad_angle) + position0.y;
 
