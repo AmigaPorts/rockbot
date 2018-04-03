@@ -103,6 +103,8 @@ projectile::projectile(Uint8 id, Uint8 set_direction, st_position set_position, 
         draw_lib.set_flash_enabled(true);
     } else if (_move_type == TRAJECTORY_PUSH_BACK) {
         _effect_timer = timer.getTimer() + 2000;
+    } else if (_move_type == TRAJECTORY_PULL) {
+        _effect_timer = timer.getTimer() + 2000;
     } else if (_move_type == TRAJECTORY_LASER) {
         status = TRAJECTORY_LINEAR; // we use status as the real trajectory in laser
     } else if (_move_type == TRAJECTORY_CENTERED) {
@@ -509,11 +511,25 @@ st_size projectile::move() {
             position.y += get_speed();
             moved.height += get_speed();
         }
+    } else if (_move_type == TRAJECTORY_SLASH) {
+        // follow owner position
+        if (_owner_position == NULL) {
+            std::cout << "ERROR: owner positoon NOT set in TRAJECTORY_SLASH projectile" << std::endl;
+        } else {
+            if (direction == ANIM_DIRECTION_LEFT) {
+                position.x = _owner_position->x - 20;
+                position.y = _owner_position->y + 6;
+            } else {
+                position.x = _owner_position->x + 20;
+                position.y = _owner_position->y + 6;
+            }
+            if (_owner_direction != NULL) {
+                direction = *_owner_direction;
+            }
+        }
     } else if (_move_type == TRAJECTORY_TARGET_DIRECTION || _move_type == TRAJECTORY_TARGET_EXACT) {
         move_ahead(moved);
         position.y += _diagonal_speed.y;
-
-
     } else if (_move_type == TRAJECTORY_ARC) {
         if (position.y < _size.height || position.y > RES_H) {
             is_finished = true;
@@ -740,6 +756,11 @@ st_size projectile::move() {
         if (timer.getTimer() > _effect_timer) {
             is_finished = true;
         }
+    } else if (_move_type == TRAJECTORY_PULL) {
+        // execution will be handled by move_projectiles() in player/npc classes, only control duration
+        if (timer.getTimer() > _effect_timer) {
+            is_finished = true;
+        }
 
     } else if (_move_type == TRAJECTORY_LIGHTING) {
         if (_effect_n > LIGHTING_FRAMES_N) {
@@ -886,7 +907,7 @@ void projectile::draw() {
 		return;
 	}
 
-    if (_move_type == TRAJECTORY_QUAKE || _move_type == TRAJECTORY_FREEZE || _move_type == TRAJECTORY_PUSH_BACK) { /// QTODO: freeze could use some "sparkling" effect
+    if (_move_type == TRAJECTORY_QUAKE || _move_type == TRAJECTORY_FREEZE || _move_type == TRAJECTORY_PUSH_BACK || _move_type == TRAJECTORY_PULL) { /// QTODO: freeze could use some "sparkling" effect
 		//std::cout << "projectile::draw - invisible type" << std::endl;
 		return;
     } else if (_move_type == TRAJECTORY_BOMB_RAIN) {
@@ -897,6 +918,8 @@ void projectile::draw() {
 		//std::cout << "projectile::draw - RESET animation_pos" << std::endl;
         if (_move_type == TRAJECTORY_RING) { // ring will be kept at last two frames
             animation_pos = _max_frames-2;
+        } else if (_move_type == TRAJECTORY_SLASH) {
+            is_finished = true;
         } else {
             animation_pos = 0;
         }
@@ -994,7 +1017,7 @@ void projectile::draw() {
 // TODO: width/height must come from editor instead of using graphLib.projectile_surface
 bool projectile::check_collision(st_rectangle enemy_pos, st_position pos_inc) const
 {
-    if (_move_type == TRAJECTORY_QUAKE || _move_type == TRAJECTORY_FREEZE || _move_type == TRAJECTORY_PUSH_BACK) {
+    if (_move_type == TRAJECTORY_QUAKE || _move_type == TRAJECTORY_FREEZE || _move_type == TRAJECTORY_PUSH_BACK || _move_type == TRAJECTORY_PULL) {
         //std::cout << ">>>> PROJECTILE::check_collision - LEAVE #1" << std::endl;
         return false;
     }
@@ -1073,7 +1096,7 @@ Uint8 projectile::get_direction() const
 void projectile::reflect()
 {
     // if it is a bomb, don't reflect at all
-    if (get_trajectory() == TRAJECTORY_BOMB || get_trajectory() == TRAJECTORY_FALL_BOMB || get_trajectory() == TRAJECTORY_LIGHTING) {
+    if (get_trajectory() == TRAJECTORY_BOMB || get_trajectory() == TRAJECTORY_FALL_BOMB || get_trajectory() == TRAJECTORY_LIGHTING || get_trajectory() == TRAJECTORY_SLASH) {
         return;
     } else if (get_trajectory() == TRAJECTORY_LARGE_BEAM) {
         return;
