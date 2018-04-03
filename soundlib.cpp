@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include "soundlib.h"
+#include <xmp.h>
 
 #ifdef ANDROID
 #include <android/log.h>
@@ -11,15 +12,31 @@ extern string GAMEPATH;
 
 #include "file/format.h"
 extern struct CURRENT_FILE_FORMAT::st_game_config game_config;
+xmp_context ctx;
 
 soundLib::soundLib() : _repeated_sfx_channel(-1), _repeated_sfx(-1)
 {
 	music = NULL;
 	boss_music = NULL;
     is_playing_boss_music = false;
-
+	ctx = xmp_create_context();
+	SDL_AudioSpec a;
+	a.freq = 44100;
+	a.format = AUDIO_S16SYS;
+	a.channels = 2;
+	a.samples = 2048;
+	a.callback = soundLib::fill_audio;
+	a.userdata = ctx;
+	if (SDL_OpenAudio(&a, NULL) < 0) {
+		fprintf(stderr, "%s\n", SDL_GetError());
+	}
     //game_config.volume_music = 10;
     //game_config.volume_sfx = 100;
+}
+
+static void soundLib::fill_audio(void *udata, Uint8 *stream, int len)
+{
+	xmp_play_buffer((xmp_context)udata, stream, len, 0);
 }
 
 soundLib::~soundLib()
@@ -35,6 +52,8 @@ void soundLib::init_audio_system()
         __android_log_print(ANDROID_LOG_INFO, "###ROCKBOT2###", "### SOUNDLIB[Couldn't open audio.] ###");
 #endif
     }
+	if ((ctx = xmp_create_context()) == NULL)
+		return 1;
 	load_all_sfx();
 }
 
@@ -239,9 +258,9 @@ void soundLib::load_music(std::string music_file) {
 
 	unload_music();
     filename = FILEPATH + "music/" + music_file;
-	music = Mix_LoadMUS(filename.c_str());
-	if (!music) {
-        std::cout << "Error in soundLib::load_music::Mix_LoadMUS('" << filename << "': '" << Mix_GetError() << "'\n";
+	music = xmp_load_module(ctx, filename.c_str());//Mix_LoadMUS(filename.c_str());
+	if (music != 0) {
+        std::cout << "Error in soundLib::load_music::Mix_LoadMUS('" << filename << "': '" << music/*Mix_GetError()*/ << "'\n";
 #ifdef ANDROID
         __android_log_print(ANDROID_LOG_INFO, "###ROCKBOT2###", "### SOUNDLIB::load_music - not found[%s] ###", music_file.c_str());
 #endif
@@ -253,9 +272,9 @@ void soundLib::load_shared_music(string music_file)
     string filename;
 
     unload_music();
-    filename = GAMEPATH + "/shared/music/" + music_file;
-    music = Mix_LoadMUS(filename.c_str());
-    if (!music) {
+    filename = GAMEPATH + "shared/music/" + music_file;
+    music = xmp_load_module(ctx, filename.c_str());//Mix_LoadMUS(filename.c_str());
+    if (music != 0) {
         std::cout << "Error in soundLib::load_music::Mix_LoadMUS('" << filename << "': '" << Mix_GetError() << "'\n";
 #ifdef ANDROID
         __android_log_print(ANDROID_LOG_INFO, "###ROCKBOT2###", "### SOUNDLIB::load_music - not found[%s] ###", music_file.c_str());
@@ -267,14 +286,17 @@ void soundLib::load_boss_music(string music_file) {
 	string filename;
 
 	if (boss_music != NULL) {
-		Mix_HaltMusic();
-		Mix_FreeMusic(boss_music);
-        boss_music = NULL;
+		//Mix_HaltMusic();
+		//Mix_FreeMusic(boss_music);
+		xmp_end_player(ctx);
+		xmp_release_module(ctx);
+		boss_music = NULL;
 	}
-    filename = FILEPATH + "music/" + music_file;
+
+	filename = FILEPATH + "music/" + music_file;
 	//std::cout << "soundLib::load_boss_music - filename: " << filename << std::endl;
-	boss_music = Mix_LoadMUS(filename.c_str());
-	if (!boss_music) {
+	boss_music = xmp_load_module(ctx, filename.c_str());//Mix_LoadMUS(filename.c_str());
+	if (boss_music != 0) {
         std::cout << "Error in soundLib::load_boss_music::Mix_LoadMUS('" << filename << "': '" << Mix_GetError() << "'\n";
 #ifdef ANDROID
         __android_log_print(ANDROID_LOG_INFO, "###ROCKBOT2###", "### SOUNDLIB::load_boss_music - not found[%s] ###", music_file.c_str());
@@ -285,8 +307,10 @@ void soundLib::load_boss_music(string music_file) {
 void soundLib::unload_music()
 {
 	if (music != NULL) {
-		Mix_HaltMusic();
-		Mix_FreeMusic(music);
+		//Mix_HaltMusic();
+		//Mix_FreeMusic(music);
+		xmp_end_player(ctx);
+    		xmp_release_module(ctx);
 		music = NULL;
 	}
     is_playing_boss_music = false;
@@ -301,7 +325,9 @@ void soundLib::play_music() {
 	}
 	// toca a música
 	if (music) {
-		if (Mix_PlayMusic(music, -1) == -1) {
+		SDL_PauseAudio(0);
+		if (xmp_start_player(ctx, 44100, 0) != 0) {
+		//if (Mix_PlayMusic(music, -1) == -1) {
             std::cout << "<<<<<<<<<<<<< Mix_PlayMusic Error: " << Mix_GetError() << std::endl;
 #ifdef ANDROID
         __android_log_print(ANDROID_LOG_INFO, "###ROCKBOT2###", "### Mix_PlayMusic Error[%s] ###", Mix_GetError());
@@ -324,7 +350,9 @@ void soundLib::play_boss_music() {
 	}
 	// toca a música
 	if (boss_music) {
-		if (Mix_PlayMusic(boss_music, -1) == -1) {
+		SDL_PauseAudio(0);
+if (xmp_start_player(ctx, 44100, 0) != 0) {
+	//	if (Mix_PlayMusic(boss_music, -1) == -1) {
             std::cout << "<<<<<<<<<<<<< Mix_PlayMusic, Error: " << Mix_GetError() << std::endl;
 #ifdef ANDROID
         __android_log_print(ANDROID_LOG_INFO, "###ROCKBOT2###", "### SOUNDLIB::play_boss_music Error[%s] ###", Mix_GetError());
@@ -380,8 +408,11 @@ void soundLib::close_audio() {
 #ifdef ANDROID
         __android_log_print(ANDROID_LOG_INFO, "###ROCKBOT2###", "### SOUNDLIB::close_audio");
 #endif
-    Mix_FreeMusic(music);
-	Mix_CloseAudio();
+    //Mix_FreeMusic(music);
+//	Mix_CloseAudio();
+xmp_end_player(ctx);
+xmp_release_module(ctx);
+xmp_free_context(ctx);
 }
 
 void sound_loop() {}

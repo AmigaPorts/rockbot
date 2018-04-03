@@ -109,7 +109,7 @@ void scenesLib::draw_main()
 
 	// PARTE 1 - TITLE SCREEN
     graphicsLib_gSurface intro_screen;
-    std::string intro_path = FILEPATH + "/images/logo.png";
+    std::string intro_path = FILEPATH + "images/logo.png";
     graphLib.surfaceFromFile(intro_path, &intro_screen);
     //graphLib.copyArea(st_position(-graphLib.RES_DIFF_W, -graphLib.RES_DIFF_H+20), &intro_screen, &graphLib.gameScreen);
     graphLib.zoom_image(st_position(-graphLib.RES_DIFF_W, -graphLib.RES_DIFF_H+20), intro_screen, false);
@@ -227,7 +227,7 @@ void scenesLib::main_screen()
                 main_picker.draw();
             }
         } else if (picked_n == 2) { // CONFIG //
-//            menu.show_main_config(0, false);
+            menu.show_main_config(0, false);
 			draw_main();
 			main_picker.draw();
         } else if (picked_n == 3) { // MANUAL //
@@ -480,7 +480,7 @@ void scenesLib::show_enemies_ending()
     draw_lib.show_boss_intro_bg();
 
     soundManager.stop_music();
-    if (fio.file_exists(FILEPATH + "/music/ending_bosses.mod")) {
+    if (fio.file_exists(FILEPATH + "music/ending_bosses.mod")) {
         soundManager.load_music("ending_bosses.mod");
     } else {
         soundManager.load_shared_music("ending_bosses.mod");
@@ -558,7 +558,7 @@ void scenesLib::show_bosses_ending()
     graphLib.blank_screen();
     // read bosses strings
     CURRENT_FILE_FORMAT::fio_strings fio_str;
-    std::vector<std::string> boss_credits_data = fio_str.get_string_list_from_file(FILEPATH + "/boss_credits.txt");
+    std::vector<std::string> boss_credits_data = fio_str.get_string_list_from_file(FILEPATH + "boss_credits.txt");
 
     for (int i=0; i<CASTLE1_STAGE5; i++) {
 

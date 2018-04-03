@@ -5,6 +5,7 @@
 #include "character/character.h"
 #include "collision_detection.h"
 #ifdef __AMIGA__
+
 #include <math.h>
 #else
 #include <cmath>
@@ -790,7 +791,7 @@ st_size projectile::move() {
         }
 
         //position.y += 0.5;
-        float rad_angle = angle * M_PI/180.00;
+        double rad_angle = (angle * M_PI)/180.00;
         position.x = _speed_x*cos(rad_angle) + position0.x;
         position.y = _speed_x*sin(rad_angle) + position0.y;
 

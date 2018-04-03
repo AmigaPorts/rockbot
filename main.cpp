@@ -32,7 +32,7 @@
 //#define PS2LOADFROMFIXEDPOINT 1
 //#define DISABLESOUND 1
 //#define PS2LINK 1
-#define DEBUG_OUTPUT 1 // will output all DEBUG_COUT messages, comments this out to disable all console output messages
+//#define DEBUG_OUTPUT 1 // will output all DEBUG_COUT messages, comments this out to disable all console output messages
 
 // GLOBAL/EXTERN VARIABLES
 std::string GAMEPATH; // path without DATA/GAMES
@@ -83,6 +83,8 @@ jobject activity_ref;
     std::string EXEC_NAME("");
 #elif defined(WII)
     std::string EXEC_NAME("boot.dol");
+#elif defined(AMIGA)
+    std::string EXEC_NAME("rockbot.68k");
 #else
     std::string EXEC_NAME("rockbot");
 #endif
@@ -447,9 +449,9 @@ int main(int argc, char *argv[])
     // *** IURI: HACK TO FORCE DISABLE PLAY SERVICES *** //
 
 
-    //GAMENAME = std::string("Rockbot2");
-    gameControl.select_game_screen();
-    GAMENAME = gameControl.get_selected_game();
+    GAMENAME = std::string("Rockbot1");
+    //gameControl.select_game_screen();
+    //GAMENAME = gameControl.get_selected_game();
 
     fflush(stdout);
 
@@ -477,7 +479,7 @@ int main(int argc, char *argv[])
         SDL_Quit();
         return 0;
     }
-    FILEPATH += std::string("/games/") + GAMENAME + std::string("/");
+    FILEPATH += std::string("games/") + GAMENAME + std::string("/");
 
 	fio.read_game(game_data);
 

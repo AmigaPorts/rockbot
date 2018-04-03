@@ -46,7 +46,7 @@ template <class T> void fio_common::save_data_to_disk(std::string file, std::vec
 
 template <class T> std::vector<T> fio_common::load_from_disk(std::string file)
 {
-    std::string filename = std::string(FILEPATH) + "/" + file;
+    std::string filename = std::string(FILEPATH) + file;
     std::vector<T> res;
     FILE *fp = fopen(filename.c_str(), "rb");
     if (!fp) {

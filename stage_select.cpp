@@ -148,7 +148,7 @@ int stage_select::pick_stage(int stage_n)
     }
     int max_stage = gameControl.get_last_castle_stage();
 
-    std::string bg_filename = FILEPATH + "/images/backgrounds/stage_select.png";
+    std::string bg_filename = FILEPATH + "images/backgrounds/stage_select.png";
     graphicsLib_gSurface bg_surface;
     graphLib.surfaceFromFile(bg_filename, &bg_surface);
 
@@ -170,18 +170,18 @@ int stage_select::pick_stage(int stage_n)
 
 
     graphicsLib_gSurface background_face_surface;
-    graphLib.surfaceFromFile(FILEPATH + "/images/faces/background.png", &background_face_surface);
+    graphLib.surfaceFromFile(FILEPATH + "images/faces/background.png", &background_face_surface);
 
     graphicsLib_gSurface light_face_surface;
-    graphLib.surfaceFromFile(FILEPATH + "/images/faces/background_light.png", &light_face_surface);
+    graphLib.surfaceFromFile(FILEPATH + "images/faces/background_light.png", &light_face_surface);
     graphicsLib_gSurface dark_face_surface;
-    graphLib.surfaceFromFile(FILEPATH + "/images/faces/background_dark.png", &dark_face_surface);
+    graphLib.surfaceFromFile(FILEPATH + "images/faces/background_dark.png", &dark_face_surface);
 
     st_position face_pos = st_position(30, 60+60);
     // draw faces
     for (int i=0; i<=8; i++) {
         face_pos = calc_face_pos(i);
-        std::string face_filename = FILEPATH + "/images/faces/" + game_data.stage_face_filename[i];
+        std::string face_filename = FILEPATH + "images/faces/" + game_data.stage_face_filename[i];
         graphicsLib_gSurface face_surface;
         graphLib.surfaceFromFile(face_filename, &face_surface);
         graphLib.copyArea(st_position(face_pos.x-8, face_pos.y-8), &background_face_surface, &graphLib.gameScreen);
@@ -194,7 +194,7 @@ int stage_select::pick_stage(int stage_n)
     face_pos = calc_face_pos(9);
     graphLib.copyArea(st_position(face_pos.x-8, face_pos.y-8), &background_face_surface, &graphLib.gameScreen);
     if (can_access_castle) {
-        std::string face_filename = FILEPATH + "/images/faces/" + game_data.stage_face_filename[9];
+        std::string face_filename = FILEPATH + "images/faces/" + game_data.stage_face_filename[9];
         graphicsLib_gSurface face_surface;
         graphLib.surfaceFromFile(face_filename, &face_surface);
         graphLib.copyArea(st_position(face_pos.x, face_pos.y), &face_surface, &graphLib.gameScreen);

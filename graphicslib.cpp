@@ -142,7 +142,7 @@ bool graphicsLib::initGraphics()
 
     // FONT
     TTF_Init();
-    filename = GAMEPATH + "/fonts/pressstart2p.ttf";
+    filename = GAMEPATH + "fonts/pressstart2p.ttf";
 
 	char *buffer = new char[filename.size()+1];
 	std::strcpy(buffer, filename.c_str());
@@ -195,7 +195,7 @@ void graphicsLib::load_shared_graphics()
     std::string filename = GAMEPATH + "shared/images/config_bg.png";
     surfaceFromFile(filename, &config_menu);
 
-    water_tile = SDLSurfaceFromFile(GAMEPATH + "/shared/images/water_tile.png");
+    water_tile = SDLSurfaceFromFile(GAMEPATH + "shared/images/water_tile.png");
     SDL_SetAlpha(water_tile, SDL_SRCALPHA, 120);
     _config_menu_pos.x = 0;
 }

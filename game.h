@@ -17,6 +17,7 @@ class classnpc;
 #include "objects/object.h"
 #include "class_config.h"
 #include "scenes/dialogs.h"
+#include "scenes/game_menu.h"
 #include "aux_tools/fps_control.h"
 
 

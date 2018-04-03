@@ -20,6 +20,7 @@ public:
  */
     soundLib();
     ~soundLib();
+    static void fill_audio(void *udata, Uint8 *stream, int len);
     void init_audio_system();
     void play_sfx(Uint8 sfx);
     void play_repeated_sfx(Uint8 sfx, Uint8 loops);
@@ -57,8 +58,8 @@ public:
 
 private:
     Mix_Chunk *sfx_list[SFX_COUNT]; /**< TODO */
-    Mix_Music *music; /**< TODO */
-    Mix_Music *boss_music; /**< TODO */
+    int/*Mix_Music*/ *music; /**< TODO */
+    int/*Mix_Music*/ *boss_music; /**< TODO */
     Sint8 _repeated_sfx_channel; /**< TODO */
     Uint8 _repeated_sfx; /**< TODO */
     bool is_playing_boss_music;

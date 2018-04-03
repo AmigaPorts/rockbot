@@ -229,7 +229,7 @@ namespace format_v4 {
 
         bool USE_NEW_READ = true;
         if (USE_NEW_READ == false) {
-            filename = std::string(FILEPATH) + "/game" + sufix + ".dat";
+            filename = std::string(FILEPATH) + "game" + sufix + ".dat";
             fp = fopen(filename.c_str(), "rb");
             if (!fp) {
                 std::cout << ">>file_io::read_game - file '" << filename << "' not found." << std::endl;
@@ -251,7 +251,7 @@ namespace format_v4 {
         // Sint8 semi_charged_projectile_id;
         // Sint8 player_items[FS_PLATER_ITEMS_N];
         // char stage_face_filename[MAX_STAGES][FS_FACE_FILENAME_MAX]
-        filename = std::string(FILEPATH) + "/game_properties" + sufix + ".dat";
+        filename = std::string(FILEPATH) + "game_properties" + sufix + ".dat";
         fp = fopen(filename.c_str(), "rb");
         if (!fp) {
             std::cout << ">>file_io::read_game - file '" << filename << "' not found." << std::endl;
@@ -343,7 +343,7 @@ namespace format_v4 {
 
 // -------------------------------------- WEAPONS -------------------------------------- //
         // file_weapon weapons[FS_MAX_WEAPONS]
-        filename = std::string(FILEPATH) + "/game_weapons" + sufix + ".dat";
+        filename = std::string(FILEPATH) + "game_weapons" + sufix + ".dat";
         filename = StringUtils::clean_filename(filename);
         fp = fopen(filename.c_str(), "rb");
         if (!fp) {
@@ -360,7 +360,7 @@ namespace format_v4 {
 
 // -------------------------------------- TROPHIES -------------------------------------- //
         // st_file_trophy trophies[TROPHIES_MAX]
-        filename = std::string(FILEPATH) + "/game_trophies" + sufix + ".dat";
+        filename = std::string(FILEPATH) + "game_trophies" + sufix + ".dat";
         filename = StringUtils::clean_filename(filename);
         fp = fopen(filename.c_str(), "rb");
         if (!fp) {
@@ -377,7 +377,7 @@ namespace format_v4 {
 
 // -------------------------------------- ARMOR PIECES -------------------------------------- //
         // st_armor_piece armor_pieces[FS_PLAYER_ARMOR_PIECES_MAX]
-        filename = std::string(FILEPATH) + "/game_armorPieces" + sufix + ".dat";
+        filename = std::string(FILEPATH) + "game_armorPieces" + sufix + ".dat";
         filename = StringUtils::clean_filename(filename);
         fp = fopen(filename.c_str(), "rb");
         if (!fp) {
@@ -395,7 +395,7 @@ namespace format_v4 {
 
 // -------------------------------------- WEAPON MENU COLORS -------------------------------------- //
         // st_color weapon_menu_colors[MAX_WEAPON_N];
-        filename = std::string(FILEPATH) + "/game_weaponMenuColors" + sufix + ".dat";
+        filename = std::string(FILEPATH) + "game_weaponMenuColors" + sufix + ".dat";
         filename = StringUtils::clean_filename(filename);
 
         fp = fopen(filename.c_str(), "rb");
@@ -415,7 +415,7 @@ namespace format_v4 {
     void file_io::read_all_stages(format_v4::file_stages& stages_data_out)
     {
         std::ifstream fp;
-        std::string filename = std::string(FILEPATH) + "/stages" + sufix + ".dat";
+        std::string filename = std::string(FILEPATH) + "stages" + sufix + ".dat";
         filename = StringUtils::clean_filename(filename);
         fp.open(filename.c_str(), std::ios::in | std::ios::binary | std::ios::app);
         if (!fp.is_open()) {
@@ -430,7 +430,7 @@ namespace format_v4 {
     void file_io::read_stage(format_v4::file_stage &stages_data_out, short stage_n)
     {
         FILE *fp;
-        std::string filename = std::string(FILEPATH) + "/stages" + sufix + ".dat";
+        std::string filename = std::string(FILEPATH) + "stages" + sufix + ".dat";
         filename = StringUtils::clean_filename(filename);
         fp = fopen(filename.c_str(), "rb");
         if (!fp) {
@@ -451,7 +451,7 @@ namespace format_v4 {
     void file_io::read_all_maps(file_map (&data_out)[FS_MAX_STAGES][FS_STAGE_MAX_MAPS])
     {
         std::ifstream fp;
-        std::string filename = std::string(FILEPATH) + std::string("/maps.dat");
+        std::string filename = std::string(FILEPATH) + std::string("maps.dat");
         filename = StringUtils::clean_filename(filename);
         fp.open(filename.c_str(), std::ios::in | std::ios::binary | std::ios::app);
         if (!fp.is_open()) {
@@ -517,7 +517,7 @@ namespace format_v4 {
     void file_io::read_all_maps_v2(file_map_v2 (&data_out)[FS_MAX_STAGES][FS_STAGE_MAX_MAPS])
     {
         std::ifstream fp;
-        std::string filename = std::string(FILEPATH) + std::string("/maps_v2.dat");
+        std::string filename = std::string(FILEPATH) + std::string("maps_v2.dat");
         filename = StringUtils::clean_filename(filename);
         fp.open(filename.c_str(), std::ios::in | std::ios::binary | std::ios::app);
         if (!fp.is_open()) {
@@ -534,7 +534,7 @@ namespace format_v4 {
 
     void file_io::write_all_maps_v2(file_map_v2 (&data_in)[FS_MAX_STAGES][FS_STAGE_MAX_MAPS])
     {
-        std::string filename = std::string(FILEPATH) + "/maps_v2.dat";
+        std::string filename = std::string(FILEPATH) + "maps_v2.dat";
         std::ofstream fp;
         fp.open(filename.c_str(), std::ios::out | std::ios::binary | std::ios::ate);
         if (!fp.is_open()) {
@@ -554,7 +554,7 @@ namespace format_v4 {
     void file_io::read_stage_maps_v2(int stage_id, file_map_v2 (&data_out)[FS_STAGE_MAX_MAPS])
     {
         std::ifstream fp;
-        std::string filename = std::string(FILEPATH) + std::string("/maps_v2.dat");
+        std::string filename = std::string(FILEPATH) + std::string("maps_v2.dat");
         filename = StringUtils::clean_filename(filename);
         fp.open(filename.c_str(), std::ios::in | std::ios::binary | std::ios::app);
         if (!fp.is_open()) {
@@ -579,8 +579,9 @@ namespace format_v4 {
     std::vector<CURRENT_FILE_FORMAT::file_map_npc_v2> file_io::read_map_enemy_list(int stage_id)
     {
         std::vector<CURRENT_FILE_FORMAT::file_map_npc_v2> res;
-        std::vector<CURRENT_FILE_FORMAT::file_map_npc_v2> temp = fio_cmm.load_from_disk<CURRENT_FILE_FORMAT::file_map_npc_v2>(std::string("/map_npc_data.dat"));
-        for (int i=0; i<temp.size(); i++) {
+        std::vector<CURRENT_FILE_FORMAT::file_map_npc_v2> temp = fio_cmm.load_from_disk<CURRENT_FILE_FORMAT::file_map_npc_v2>(std::string("map_npc_data.dat"));
+	for (int i=0; i<temp.size(); i++) {
+		std::cout << "EnemyId" << i << ""  << std::endl;
             if (temp[i].stage_id == stage_id) {
                 res.push_back(temp[i]);
             }
@@ -592,7 +593,7 @@ namespace format_v4 {
     std::vector<CURRENT_FILE_FORMAT::file_map_object_v2> file_io::read_map_object_list(int stage_id)
     {
         std::vector<CURRENT_FILE_FORMAT::file_map_object_v2> res;
-        std::vector<CURRENT_FILE_FORMAT::file_map_object_v2> temp = fio_cmm.load_from_disk<CURRENT_FILE_FORMAT::file_map_object_v2>(std::string("/map_object_data.dat"));
+        std::vector<CURRENT_FILE_FORMAT::file_map_object_v2> temp = fio_cmm.load_from_disk<CURRENT_FILE_FORMAT::file_map_object_v2>(std::string("map_object_data.dat"));
         for (int i=0; i<temp.size(); i++) {
             if (temp[i].stage_id == stage_id) {
                 res.push_back(temp[i]);
@@ -615,7 +616,7 @@ namespace format_v4 {
 
     std::vector<std::string> file_io::read_game_list()
     {
-        std::string filename = GAMEPATH + "/games/";
+        std::string filename = GAMEPATH + "games/";
         filename = StringUtils::clean_filename(filename);
         return read_directory_list(filename, true);
     }

@@ -2149,8 +2149,8 @@ void artificial_inteligence::execute_ai_circle_player()
             }
         // circle player (3 and half laps)
         } else if (_execution_state == 1) {
-            float x = _target_point.x + radius * cos(_angle) - (TILESIZE*1.5);
-            float y = _target_point.y + radius * sin(_angle);
+            double x = _target_point.x + radius * cos((double)_angle) - (TILESIZE*1.5);
+            double y = _target_point.y + radius * sin((double)_angle);
 
             //std::cout << "CIRCLE radius[" << radius << "], counter[" << _counter << "], angle[" << _angle << "] a[" << _target_point.x << "], b[" << _target_point.y << "], x[" << x << "], y[" << y << "]" << std::endl;
 
