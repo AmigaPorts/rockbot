@@ -121,8 +121,8 @@ namespace format_v4 {
         std::string filename = "";
 
 
-// -------------------------------------- GAME -------------------------------------- //
-        filename = std::string(FILEPATH) + "/game_properties" + sufix + ".dat";
+	// -------------------------------------- GAME -------------------------------------- //
+        filename = std::string(FILEPATH) + "game_properties" + sufix + ".dat";
         fp.open(filename.c_str(), std::ios::out | std::ios::binary | std::ios::ate);
         if (!fp.is_open()) {
             std::cout << "ERROR::write_game - could not write to file '" << filename << "'. Will create new one." << std::endl;
@@ -153,7 +153,7 @@ namespace format_v4 {
 
 
 
-// -------------------------------------- WEAPONS -------------------------------------- //
+	// -------------------------------------- WEAPONS -------------------------------------- //
         // file_weapon weapons[FS_MAX_WEAPONS]
         filename = std::string(FILEPATH) + "/game_weapons" + sufix + ".dat";
         fp.open(filename.c_str(), std::ios::out | std::ios::binary | std::ios::ate);
@@ -165,7 +165,7 @@ namespace format_v4 {
         fp.close();
 
 
-// -------------------------------------- TROPHIES -------------------------------------- //
+	// -------------------------------------- TROPHIES -------------------------------------- //
         // st_file_trophy trophies[TROPHIES_MAX]
         filename = std::string(FILEPATH) + "/game_trophies" + sufix + ".dat";
         fp.open(filename.c_str(), std::ios::out | std::ios::binary | std::ios::ate);
@@ -177,8 +177,8 @@ namespace format_v4 {
         fp.close();
 
 
-// -------------------------------------- ARMOR PIECES -------------------------------------- //
-        // st_armor_piece armor_pieces[FS_PLAYER_ARMOR_PIECES_MAX]
+	// -------------------------------------- ARMOR PIECES -------------------------------------- //
+	// st_armor_piece armor_pieces[FS_PLAYER_ARMOR_PIECES_MAX]
         filename = std::string(FILEPATH) + "/game_armorPieces" + sufix + ".dat";
         fp.open(filename.c_str(), std::ios::out | std::ios::binary | std::ios::ate);
         if (!fp.is_open()) {
@@ -189,7 +189,7 @@ namespace format_v4 {
         fp.close();
 
 
-// -------------------------------------- WEAPON MENU COLORS -------------------------------------- //
+	// -------------------------------------- WEAPON MENU COLORS -------------------------------------- //
         // st_color weapon_menu_colors[MAX_WEAPON_N];
         filename = std::string(FILEPATH) + "/game_weaponMenuColors" + sufix + ".dat";
         fp.open(filename.c_str(), std::ios::out | std::ios::binary | std::ios::ate);
@@ -208,7 +208,7 @@ namespace format_v4 {
     void file_io::write_all_stages(format_v4::file_stages &stages_data_in) const
     {
         std::ofstream fp;
-        std::string filename = std::string(FILEPATH) + "/stages" + sufix + ".dat";
+        std::string filename = std::string(FILEPATH) + "stages" + sufix + ".dat";
         fp.open(filename.c_str(), std::ios::out | std::ios::binary | std::ios::ate);
         if (!fp.is_open()) {
             std::cout << "ERROR::write_all_stages - could not write to file '" << filename << "'. Will create new one." << std::endl;
@@ -245,12 +245,12 @@ namespace format_v4 {
             fclose(fp);
             return;
         }
-// -------------------------------------- GAME -------------------------------------- //
+	// -------------------------------------- GAME -------------------------------------- //
         // float version;
         // char name[FS_CHAR_NAME_SIZE];
         // Sint8 semi_charged_projectile_id;
         // Sint8 player_items[FS_PLATER_ITEMS_N];
-        // char stage_face_filename[MAX_STAGES][FS_FACE_FILENAME_MAX]
+	        // char stage_face_filename[MAX_STAGES][FS_FACE_FILENAME_MAX]
         filename = std::string(FILEPATH) + "game_properties" + sufix + ".dat";
         fp = fopen(filename.c_str(), "rb");
         if (!fp) {
@@ -341,7 +341,7 @@ namespace format_v4 {
         fclose(fp);
 
 
-// -------------------------------------- WEAPONS -------------------------------------- //
+	// -------------------------------------- WEAPONS -------------------------------------- //
         // file_weapon weapons[FS_MAX_WEAPONS]
         filename = std::string(FILEPATH) + "game_weapons" + sufix + ".dat";
         filename = StringUtils::clean_filename(filename);
@@ -358,7 +358,7 @@ namespace format_v4 {
         fclose(fp);
 
 
-// -------------------------------------- TROPHIES -------------------------------------- //
+	// -------------------------------------- TROPHIES -------------------------------------- //
         // st_file_trophy trophies[TROPHIES_MAX]
         filename = std::string(FILEPATH) + "game_trophies" + sufix + ".dat";
         filename = StringUtils::clean_filename(filename);
@@ -375,7 +375,7 @@ namespace format_v4 {
         fclose(fp);
 
 
-// -------------------------------------- ARMOR PIECES -------------------------------------- //
+	// -------------------------------------- ARMOR PIECES -------------------------------------- //
         // st_armor_piece armor_pieces[FS_PLAYER_ARMOR_PIECES_MAX]
         filename = std::string(FILEPATH) + "game_armorPieces" + sufix + ".dat";
         filename = StringUtils::clean_filename(filename);
@@ -393,7 +393,7 @@ namespace format_v4 {
 
 
 
-// -------------------------------------- WEAPON MENU COLORS -------------------------------------- //
+	// -------------------------------------- WEAPON MENU COLORS -------------------------------------- //
         // st_color weapon_menu_colors[MAX_WEAPON_N];
         filename = std::string(FILEPATH) + "game_weaponMenuColors" + sufix + ".dat";
         filename = StringUtils::clean_filename(filename);
@@ -580,13 +580,15 @@ namespace format_v4 {
     {
         std::vector<CURRENT_FILE_FORMAT::file_map_npc_v2> res;
         std::vector<CURRENT_FILE_FORMAT::file_map_npc_v2> temp = fio_cmm.load_from_disk<CURRENT_FILE_FORMAT::file_map_npc_v2>(std::string("map_npc_data.dat"));
+
 	for (int i=0; i<temp.size(); i++) {
-		std::cout << "EnemyId" << i << ""  << std::endl;
-            if (temp[i].stage_id == stage_id) {
-                res.push_back(temp[i]);
-            }
-        }
-        return res;
+		if (temp[i].stage_id == stage_id) {
+//			std::cout << "EnemyId" << i << ""  << std::endl;
+			res.push_back(temp[i]);
+		}
+	}
+
+	return res;
     }
 
     // TODO: optimize to read only the data we need //
@@ -1147,7 +1149,7 @@ namespace format_v4 {
     }
 
 
-    void file_io::wii_convert_map_data(file_map (&data_out)[FS_STAGE_MAX_MAPS])
+    void file_io::wii_convert_map_data(file_map_v2 (&data_out)[FS_STAGE_MAX_MAPS])
     {
         for (int i=0; i<FS_STAGE_MAX_MAPS; i++) {
             sint16_to_little_endian(data_out[i].backgrounds[0].adjust_y);
@@ -1155,7 +1157,7 @@ namespace format_v4 {
             sint16_to_little_endian(data_out[i].background_color.r);
             sint16_to_little_endian(data_out[i].background_color.g);
             sint16_to_little_endian(data_out[i].background_color.b);
-
+/*
             for (int j=0; j<FS_MAX_MAP_NPCS; j++) {
                 sint16_to_little_endian(data_out[i].map_npcs[j].start_point.x);
                 sint16_to_little_endian(data_out[i].map_npcs[j].start_point.y);
@@ -1166,6 +1168,7 @@ namespace format_v4 {
                 sint16_to_little_endian(data_out[i].map_objects[j].start_point.x);
                 sint16_to_little_endian(data_out[i].map_objects[j].start_point.y);
             }
+*/
         }
     }
 #endif

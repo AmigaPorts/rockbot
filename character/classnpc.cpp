@@ -216,8 +216,8 @@ void classnpc::build_basic_npc(int stage_id, int map_id, int main_id)
 
 
         std::string temp_filename = FILEPATH + "images/sprites/enemies/" + graphic_filename;
-        //printf(">> temp_filename: '%s'\n", temp_filename.c_str());
-
+        printf(">> temp_filename: '%s'\n", temp_filename.c_str());
+	std::cout << "Name: " << GameMediator::get_instance()->get_enemy(main_id)->name << std::endl;
         graphLib.surfaceFromFile(temp_filename, &npc_sprite_surface);
         if (npc_sprite_surface.get_surface() == NULL) {
 			std::cout << "initFrames - Error loading player surface from file\n";

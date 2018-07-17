@@ -1,4 +1,4 @@
-#ifdef WII
+#if defined(WII) && !defined(__AMIGA__) && !defined(AMIGA)
 #include <fat.h>
 #endif
 
@@ -32,7 +32,7 @@
 //#define PS2LOADFROMFIXEDPOINT 1
 //#define DISABLESOUND 1
 //#define PS2LINK 1
-//#define DEBUG_OUTPUT 1 // will output all DEBUG_COUT messages, comments this out to disable all console output messages
+#define DEBUG_OUTPUT 1 // will output all DEBUG_COUT messages, comments this out to disable all console output messages
 
 // GLOBAL/EXTERN VARIABLES
 std::string GAMEPATH; // path without DATA/GAMES
@@ -299,7 +299,7 @@ int main(int argc, char *argv[])
 	UNUSED(argc);
 
     string argvString = "";
-#ifndef WII
+#if !defined(WII) || defined(AMIGA) || defined(__AMIGA__)
     argvString = string(argv[0]);
 #else
     if (!fatInitDefault()) {
@@ -449,7 +449,7 @@ int main(int argc, char *argv[])
     // *** IURI: HACK TO FORCE DISABLE PLAY SERVICES *** //
 
 
-    GAMENAME = std::string("Rockbot1");
+    GAMENAME = std::string("Rockbot2");
     //gameControl.select_game_screen();
     //GAMENAME = gameControl.get_selected_game();
 
@@ -470,7 +470,7 @@ int main(int argc, char *argv[])
         graphLib.draw_text(20, 20, strings_map::get_instance()->get_ingame_string(strings_ingame_engineerror, game_config.selected_language) + std::string(":"));
         graphLib.draw_text(20, 32, strings_map::get_instance()->get_ingame_string(strings_ingame_nogames, game_config.selected_language));
 
-        std::string filename = GAMEPATH + "/games/";
+        std::string filename = GAMEPATH + "games/";
         filename = StringUtils::clean_filename(filename);
 
         graphLib.draw_text(20, 44, filename);
@@ -504,14 +504,14 @@ int main(int argc, char *argv[])
     #endif
 
 
-    /*
+/*
     #ifndef DEBUG_OUTPUT // redirect output to null
         std::string cout_file = "/dev/null";
         std::ofstream out(cout_file.c_str());
         std::cout.rdbuf(out.rdbuf());
     #else
         // --- REDIRECT STDOUT TO A FILE --- //
-        #if defined(PSP) || defined(WII) || defined(ANDROID) || defined(DINGUX) || defined(PLAYSTATION2)
+        #if defined(PSP) || defined(WII) || defined(ANDROID) || defined(DINGUX) || defined(PLAYSTATION2) || defined(AMIGA) || defined(__AMIGA__)
             //std::string cout_file = SAVEPATH + "/stdout.txt";
             std::string cout_file = GAMEPATH + "/stdout.txt";
             std::streambuf *coutbuf = std::cout.rdbuf();
@@ -519,7 +519,7 @@ int main(int argc, char *argv[])
             std::cout.rdbuf(out.rdbuf()); //redirect std::cout to out.txt!
         #endif
     #endif
-    */
+*/
 
 #ifdef WII
         ofstream cout("output.txt");

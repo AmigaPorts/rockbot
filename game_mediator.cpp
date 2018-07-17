@@ -46,12 +46,19 @@ int GameMediator::get_projectile_list_size()
 
 CURRENT_FILE_FORMAT::file_npc_v3_1_2* GameMediator::get_enemy(int n)
 {
+#if defined(AMIGA) || defined(__AMIGA__) || defined(__BIGENDIAN__)
+//	int_to_little_endian(n);
+	std::cout << "Get Enemy(" << n << ")" << std::endl;
+#endif
     // boss not yet set
     if (n < 0 || n >= enemy_list.size()) {
         std::cout << "ERROR: GameMediator::get_enemy - invalid enemy position[" << n << "], list-size: " << enemy_list.size() << std::endl;
         // return first NPC to avoid errors
         n = 0;
     }
+#if defined(AMIGA) || defined(__AMIGA__) || defined(__BIGENDIAN__)
+//	std::cout << "Enemy name: " << enemy_list.at(n)->name << std::endl;
+#endif
     return &enemy_list.at(n);
 }
 
@@ -60,7 +67,7 @@ int GameMediator::get_enemy_list_size()
     return enemy_list.size();
 }
 
-#ifdef WII
+//#ifdef WII
 void GameMediator::short_to_little_endian(short &s)
 {
      s = (s>>8) | (s<<8);
@@ -165,6 +172,7 @@ void GameMediator::wii_convert_projectile_list() {
 }
 
 void GameMediator::wii_convert_player_list() {
+/*
     for (int i=0; i<player_list.size(); i++) {
         sint16_to_little_endian(player_list.at(i).sprite_hit_area.x);
         sint16_to_little_endian(player_list.at(i).sprite_hit_area.y);
@@ -191,6 +199,7 @@ void GameMediator::wii_convert_player_list() {
             sint16_to_little_endian(player_list.at(i).weapon_colors[j].color3.b);
         }
     }
+*/
 }
 
 void GameMediator::wii_convert_anim_tile_list() {
@@ -200,7 +209,7 @@ void GameMediator::wii_convert_anim_tile_list() {
         }
     }
 }
-#endif
+//#endif
 
 GameMediator::GameMediator()
 {
@@ -213,13 +222,14 @@ GameMediator::GameMediator()
     player_list_v3_1 = fio_cmm.load_from_disk<CURRENT_FILE_FORMAT::file_player_v3_1_1>("player_list_v3_1_1.dat");
 
 #ifdef WII
-    wii_convert_npc_list();
-    wii_convert_object_list();
-    wii_convert_ai_list();
-    wii_convert_projectile_list();
-    wii_convert_player_list();
-    wii_convert_anim_tile_list();
+	wii_convert_npc_list();
+	wii_convert_object_list();
+	wii_convert_ai_list();
+	wii_convert_projectile_list();
+	wii_convert_player_list();
+	wii_convert_anim_tile_list();
 #endif
+
     // add some dummy data for game not to crash
     if (projectile_list.size() == 0) {
         projectile_list.push_back(CURRENT_FILE_FORMAT::file_projectilev3());

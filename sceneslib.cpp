@@ -533,6 +533,9 @@ void scenesLib::show_enemies_ending()
 void scenesLib::ending_show_single_enemy(int id, std::string name)
 {
 
+#if defined(AMIGA) || defined(__AMIGA__)
+
+#endif
     std::cout << "### SCENES::show_enemies_ending [enemy[" << id << "].name[" << name << "]" << std::endl;
 #ifdef ANDROID
     __android_log_print(ANDROID_LOG_INFO, "###ROCKBOT2###", "### SCENES::show_enemies_ending [enemy[%d].name[%s] ###", id, name.c_str());

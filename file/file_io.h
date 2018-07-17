@@ -12,7 +12,7 @@
 #include <dirent.h>
 #include <stdio.h>
 
-#ifdef WII
+#if defined(WII) && !defined(__AMIGA__) && !defined(AMIGA)
 #include <fat.h>
 #elif PS2
 #include <fileio.h>
@@ -94,7 +94,7 @@ namespace format_v4 {
         void ps2_listfiles(std::string filepath, std::vector<std::string> &res);
 #elif WII
         void wii_convert_game_data(file_game& data_out);
-        void wii_convert_map_data(file_map (&data_out)[FS_STAGE_MAX_MAPS]);
+        void wii_convert_map_data(file_map_v2 (&data_out)[FS_STAGE_MAX_MAPS]);
 #endif
 
 

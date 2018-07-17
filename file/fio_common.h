@@ -25,7 +25,7 @@ public:
 
 template <class T> void fio_common::save_data_to_disk(std::string file, std::vector<T> data)
 {
-    std::string filename = std::string(FILEPATH) + "/" + file;
+    std::string filename = std::string(FILEPATH) + file;
     std::cout << ">> file_io::save_data_to_disk - filename: '" << filename << "'." << std::endl;
     FILE *fp = fopen(filename.c_str(), "wb");
     if (!fp) {
