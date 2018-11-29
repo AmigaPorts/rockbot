@@ -319,11 +319,10 @@ void soundLib::play_music() {
 	if (game_config.sound_enabled == false) {
         return;
 	}
+    int res = -1;
 	// toca a música
 	if (music) {
-		SDL_PauseAudio(0);
-		if (xmp_start_player(ctx, 44100, 0) != 0) {
-		//if (Mix_PlayMusic(music, -1) == -1) {
+		if (Mix_PlayMusic(music, -1) == -1) {
             std::cout << "<<<<<<<<<<<<< Mix_PlayMusic Error: " << Mix_GetError() << std::endl;
 #ifdef ANDROID
         __android_log_print(ANDROID_LOG_INFO, "###ROCKBOT2###", "### Mix_PlayMusic Error[%s] ###", Mix_GetError());

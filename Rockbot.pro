@@ -172,7 +172,7 @@ win32 {
                 -lSDL_ttf \
                 -lSDL_gfx \
                 -lmingw32 -lSDL -mwindows \
-                -LC:\Qt\5.5\mingw492_32\lib
+                -LC:\Qt\4.8.4\lib
 
 
 		INCLUDES = -I/usr/include/SDL \
@@ -181,7 +181,7 @@ win32 {
                 -I./include \
                 -L/usr/lib
                 QMAKE_CCFLAGS += -DWIN32 -DPC
-                QMAKE_CXXFLAGS += -DWIN32 -DPC -IC:\Qt\5.5\mingw492_32\ -IC:\Qt\5.5\mingw492_32\include -LC:\Qt\5.5\mingw492_32\lib
+                QMAKE_CXXFLAGS += -DWIN32 -DPC -IC:\Qt\4.8.4\ -IC:\Qt\4.8.4\include -LC:\Qt\4.8.4\lib
                 CONFIG -= console
 }
 
@@ -402,7 +402,8 @@ HEADERS += \
     ports/android/android_game_services.h \
     character/character_animation.h \
     aux_tools/exception_manager.h \
-    scenes/game_menu.h
+    scenes/game_menu.h \
+    file/v4/file_castlepoints.h
 
 OTHER_FILES += \
     docs/RoadMap.txt \

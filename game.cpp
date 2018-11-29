@@ -31,6 +31,8 @@ extern soundLib soundManager;
 #include "inputlib.h"
 extern inputLib input;
 
+extern std::string GAMENAME;
+
 #include "graphic/option_picker.h"
 #include "file/format.h"
 #include "defines.h"
@@ -260,7 +262,8 @@ void game::start_stage()
     soundManager.play_music();
 
     for (int i=0; i<AUTOSCROLL_START_DELAY_FRAMES; i++) { // extra delay to show dialogs
-        input.clean_all();
+        input.read_input();
+        input.clean_confirm_button();
         loaded_stage.show_stage();
         loaded_stage.showAbove();
         draw_lib.update_screen();
@@ -283,14 +286,14 @@ void game::set_player_position_teleport_in(int initial_pos_x, int initial_pos_y)
 {
     int first_unlocked_from_bottom = loaded_stage.get_current_map()->get_first_lock_on_bottom(initial_pos_x, initial_pos_y, player1.get_size().width, player1.get_size().height);
 
-    std::cout << ">>>>>>>>>> GAME::set_player_position_teleport_in::first_unlocked_from_bottom[" << first_unlocked_from_bottom << "]" << std::endl;
+    //std::cout << ">>>>>>>>>> GAME::set_player_position_teleport_in::first_unlocked_from_bottom[" << first_unlocked_from_bottom << "]" << std::endl;
 
     player1.set_position(st_position(initial_pos_x, (first_unlocked_from_bottom+1)*TILESIZE-player1.get_size().height));
     player1.char_update_real_position();
     player1.set_animation_type(ANIM_TYPE_TELEPORT);
     player1.set_animation_frame(0);
 
-    std::cout << ">>>>>>>>>> GAME::set_player_position_teleport_in::DONE" << std::endl;
+    //std::cout << ">>>>>>>>>> GAME::set_player_position_teleport_in::DONE" << std::endl;
 }
 
 void game::show_player_teleport(int pos_x, int pos_y)
@@ -446,9 +449,6 @@ bool game::show_game_intro()
         loaded_stage = stage(currentStage, &player1);
         // show boss intro with stars, if needed
         soundManager.stop_music();
-        if (game_save.stages[currentStage] == 0 || currentStage >= CASTLE1_STAGE1) {
-            scenes.boss_intro(currentStage);
-        }
 		start_stage();
 	}
 
@@ -535,7 +535,6 @@ void game::show_notice()
 
     input.clean_and_wait_scape_time(1200);
 
-    show_in_memorian();
 
     graphLib.blank_screen();
 
@@ -1200,7 +1199,8 @@ void game::got_weapon()
         color_list.push_back(st_color(101, 105, 251));
         color_list.push_back(st_color(112, 251, 101));
         color_list.push_back(st_color(251, 101, 101));
-        soundManager.play_sfx(SFX_GOT_WEAPON);
+        soundManager.load_music(game_data.got_weapon_music_filename);
+        soundManager.play_music();
         for (int i=0; i<2; i++) {
             for (int j=0; j<color_list.size(); j++) {
                 graphLib.clear_area(0, 0, RES_W, RES_H, color_list.at(j).r, color_list.at(j).g, color_list.at(j).b);
@@ -1298,9 +1298,6 @@ void game::leave_stage()
     loaded_stage = stage(currentStage, &player1);
     // show boss intro with stars, if needed
     soundManager.stop_music();
-    if (game_save.stages[currentStage] == 0) {
-        scenes.boss_intro(currentStage);
-    }
     checkpoint.map = 0;
     checkpoint.map_scroll_x = 0;
     checkpoint.reset();
@@ -1340,9 +1337,6 @@ void game::return_to_intro_screen()
         loaded_stage = stage(currentStage, &player1);
         // show boss intro with stars, if needed
         soundManager.stop_music();
-        if (game_save.stages[currentStage] == 0 || currentStage >= CASTLE1_STAGE1) {
-            scenes.boss_intro(currentStage);
-        }
         start_stage();
     }
 }
@@ -1460,7 +1454,7 @@ void game::quick_load_game()
     }
 
     game_save.difficulty = DIFFICULTY_HARD;
-    game_save.selected_player = PLAYER_2;
+    game_save.selected_player = PLAYER_4;
 
     /*
     // DEBUG //
@@ -1483,7 +1477,7 @@ void game::quick_load_game()
     scenes.preloadScenes();
 
     // TEST //
-    GAME_FLAGS[FLAG_ALLWEAPONS] = true;
+    //GAME_FLAGS[FLAG_ALLWEAPONS] = true;
     currentStage = scenes.pick_stage(INTRO_STAGE);
     //currentStage = CASTLE1_STAGE1;
 
@@ -1495,8 +1489,6 @@ void game::quick_load_game()
 
     // DEBUG //
     //show_ending();
-
-    scenes.boss_intro(currentStage);
 
     //game_save.armor_pieces[ARMOR_TYPE_LEGS] = true;
 
@@ -1529,15 +1521,32 @@ void game::update_stage_scrolling()
 
 
 
-void game::draw_explosion(short int centerX, short int centerY, bool show_players) {
-    unsigned int timerInit;
-    int distance=0, mode=0;
-    int accel=1;
-
-    timerInit = timer.getTimer();
-
+void game::draw_explosion(st_position center, bool show_players) {
     draw_lib.update_screen();
+    int angle_inc = 0;
 
+
+    for (int i=5; i<RES_W; i+=6) {
+        loaded_stage.show_stage();
+        if (show_players) {
+            player1.show();
+        }
+        loaded_stage.showAbove();
+        angle_inc += 5;
+        if (angle_inc > 360) {
+            angle_inc = 0;
+        }
+        draw_lib.draw_explosion(center, i, angle_inc);
+        for (int k=50; k<250; k+=80) {
+            if (i > k) {
+                draw_lib.draw_explosion(center, i-k, angle_inc);
+            }
+        }
+        draw_lib.update_screen();
+        timer.delay(10);
+    }
+
+    /*
     //ANIMATION_TYPES pos_type, graphicsLib_gSurface* surface, const st_float_position &pos, st_position adjust_pos, unsigned int frame_time, unsigned int repeat_times, int direction, st_size framesize
     st_float_position anim_pos = st_float_position(centerX-23+get_current_map_obj()->get_map_scrolling_ref()->x, centerY-23);
     get_current_map_obj()->add_animation(ANIMATION_STATIC, &graphLib.explosion_player_death, anim_pos, st_position(0, 0), 100, 6, player1.get_direction(), st_size(47, 47));
@@ -1552,6 +1561,7 @@ void game::draw_explosion(short int centerX, short int centerY, bool show_player
         timer.delay(10);
     }
     timer.delay(300);
+    */
 }
 
 void game::show_player()

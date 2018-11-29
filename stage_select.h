@@ -35,15 +35,14 @@ public:
 	stage_select(graphicsLib_gSurface stage_ref[STAGE_SELECT_COUNT]);
     short finished_stages() const;
 
-    int pick_stage(int stage_n);
+    int pick_stage(int selected_stage_n);
+    int pick_stage_new(int stage_n);
 
     void show_stage_face(int x, int y, int stage_n);
 
     st_position calc_face_pos(int stage_n);
 
     void draw_stage_select_text_info(int stage_n);
-
-    bool walk_path(int incx, int incy, st_position &pos, CURRENT_FILE_FORMAT::file_stage_select map_data);
 
 private:
     void move_highlight(Sint8 x_inc, Sint8 y_inc);

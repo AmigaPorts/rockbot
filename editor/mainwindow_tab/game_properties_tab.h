@@ -2,7 +2,7 @@
 #define GAME_PROPERTIES_TAB_H
 
 #include <QWidget>
-#include "mainwindow_tab/stageselectmapdialog.h"
+#include "castlepointsdialog.h"
 
 namespace Ui {
 class game_properties_tab;
@@ -13,7 +13,7 @@ class game_properties_tab : public QWidget
     Q_OBJECT
     
 public:
-    explicit game_properties_tab(QWidget *parent = 0);
+    explicit game_properties_tab(QWidget *parent = nullptr);
     ~game_properties_tab();
     void reload();
 
@@ -62,7 +62,7 @@ private:
     Ui::game_properties_tab *ui;
     bool _data_loading;
     int _current_stage;
-    StageSelectMapDialog map_dialog;
+    CastlePointsDialog* castlePointsDialog;
 };
 
 #endif // GAME_PROPERTIES_TAB_H

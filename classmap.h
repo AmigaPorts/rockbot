@@ -35,8 +35,10 @@ struct water_bubble {
     st_position pos;
     float x_adjust;
     int x_adjust_direction;
-    unsigned int timer;
+    float timer;
 };
+
+
 
 
 struct st_level3_tile {

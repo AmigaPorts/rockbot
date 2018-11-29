@@ -230,7 +230,7 @@ void common::fill_ai_options_combo(int action, QComboBox *combo)
 
     combo->clear(); // delete all previous entries
 
-    std::cout << "########## common::fill_ai_options_combo action[" << action << "]" << std::endl;
+    //std::cout << "########## common::fill_ai_options_combo action[" << action << "]" << std::endl;
 
     std::vector<std::string> list;
 	if (action == AI_ACTION_WALK) {
@@ -398,6 +398,13 @@ void common::fill_languages_combo(QComboBox *combo)
     combo->addItem(QString("Spanish"));
     combo->addItem(QString("Italian"));
     combo->addItem(QString("Portuguese"));
+}
+
+void common::fill_numbered_combo(QComboBox *combo, int start, int end)
+{
+    for (int i=start; i<=end; i++) {
+        combo->addItem(QString::number(i));
+    }
 }
 
 std::vector<std::string> common::get_npc_names_list()

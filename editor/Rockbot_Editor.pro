@@ -115,10 +115,10 @@ SOURCES += main.cpp \
     widgets/animtilepalette.cpp \
     mainwindow_tab/anim/animpackimport.cpp \
     dialog_pick_color.cpp \
-    mainwindow_tab/stageselectmapdialog.cpp \
-    mainwindow_tab/stageselectmapeditarea.cpp \
     files_editor/gametextcreditstab.cpp \
-    ../aux_tools/exception_manager.cpp
+    ../aux_tools/exception_manager.cpp \
+    mainwindow_tab/castlepointsdialog.cpp \
+    mainwindow_tab/castle_points_editorarea.cpp
 
 HEADERS += mainwindow.h \
     editorarea.h \
@@ -196,10 +196,10 @@ HEADERS += mainwindow.h \
     widgets/animtilepalette.h \
     mainwindow_tab/anim/animpackimport.h \
     dialog_pick_color.h \
-    mainwindow_tab/stageselectmapdialog.h \
-    mainwindow_tab/stageselectmapeditarea.h \
     files_editor/gametextcreditstab.h \
-    ../aux_tools/exception_manager.h
+    ../aux_tools/exception_manager.h \
+    mainwindow_tab/castlepointsdialog.h \
+    mainwindow_tab/castle_points_editorarea.h
 
 FORMS += mainwindow.ui \
     addwizard.ui \
@@ -234,8 +234,8 @@ FORMS += mainwindow.ui \
     mainwindow_tab/anim_tiles_edit.ui \
     mainwindow_tab/anim/animpackimport.ui \
     dialog_pick_color.ui \
-    mainwindow_tab/stageselectmapdialog.ui \
-    files_editor/gametextcreditstab.ui
+    files_editor/gametextcreditstab.ui \
+    mainwindow_tab/castlepointsdialog.ui
 
 RESOURCES += resources/icons/icons.qrc
 INCLUDEPATH += ../common

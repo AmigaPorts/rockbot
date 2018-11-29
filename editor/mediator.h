@@ -5,6 +5,7 @@
 #include "file/file_io.h"
 #include "file/fio_scenes.h"
 #include "file/fio_strings.h"
+#include "file/v4/file_castlepoints.h"
 
 #include "scenes/scenesmediator.h"
 
@@ -67,7 +68,6 @@ public:
     bool show_teleporters_flag;
     short stage_select_edit_mode;
     short stage_select_stage_number;
-    CURRENT_FILE_FORMAT::file_stage_select stage_select_data;
     bool show_grid;
 
 
@@ -89,8 +89,6 @@ public:
 
     void clean_data();                                      // any sanity data cleaning goest here
     void temp_fix_player_colors_order();
-    void load_stage_select_data();
-    void save_stage_select_data();
 
     //void convertProjectileListToV2();
 
@@ -132,6 +130,7 @@ public:
     // old globals
     CURRENT_FILE_FORMAT::file_game game_data;
     CURRENT_FILE_FORMAT::file_stages stage_data;
+    CURRENT_FILE_FORMAT::file_stages_extra_data stage_extra_data;
     CURRENT_FILE_FORMAT::file_castle castle_data;
 
     // maps data
@@ -167,6 +166,9 @@ public:
 
     // stage dialogs, key is stage_n, vector represent the list for each text line
     std::vector<std::map<int, std::vector<std::string> > > stage_dialog_list;
+
+    CURRENT_FILE_FORMAT::st_file_castle_ponts points_castle1;
+    CURRENT_FILE_FORMAT::st_file_castle_ponts points_castle2;
 
 
 private:
