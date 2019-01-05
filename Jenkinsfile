@@ -35,6 +35,7 @@ node {
 		}
 	
 		stage('Clean workspace') {
+			sh "chmod a+x clean build_gmake"
 			sh "./clean"
 		}
 
