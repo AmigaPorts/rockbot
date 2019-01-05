@@ -49,6 +49,18 @@ namespace format_v4 {
             for (int i=0; i<BTN_COUNT; i++) {
                 keys_codes_copy[i] = -1;
             }
+            keys_codes_copy[BTN_SHIELD] = SDLK_LSHIFT;
+            keys_codes_copy[BTN_DASH] = SDLK_SPACE;
+            keys_codes_copy[BTN_ATTACK] = SDLK_LALT;
+            keys_codes_copy[BTN_JUMP] = SDLK_LCTRL;
+            keys_codes_copy[BTN_L] = SDLK_TAB;
+            keys_codes_copy[BTN_R] = SDLK_BACKSPACE;
+            keys_codes_copy[BTN_QUIT] = SDLK_UNKNOWN;
+            keys_codes_copy[BTN_START] = SDLK_RETURN;
+            keys_codes_copy[BTN_LEFT] = SDLK_LEFT;
+            keys_codes_copy[BTN_RIGHT] = SDLK_RIGHT;
+            keys_codes_copy[BTN_UP] = SDLK_UP;
+            keys_codes_copy[BTN_DOWN] = SDLK_DOWN;
 #elif OPEN_PANDORA
             for (int i=0; i<BTN_COUNT; i++) {
                 keys_codes_copy[i] = -1;
@@ -64,6 +76,10 @@ namespace format_v4 {
             keys_codes_copy[BTN_RIGHT] = SDLK_RIGHT;
             keys_codes_copy[BTN_UP] = SDLK_UP;
             keys_codes_copy[BTN_DOWN] = SDLK_DOWN;
+#elif RASPBERRY
+            for (int i=0; i<BTN_COUNT; i++) {
+                keys_codes_copy[i] = -1;
+            }
 #else
             keys_codes_copy[BTN_ATTACK] = SDLK_a;
             keys_codes_copy[BTN_JUMP] = SDLK_x;
@@ -227,6 +243,25 @@ namespace format_v4 {
             // start //
             button_codes_copy[BTN_START].type = JOYSTICK_INPUT_TYPE_BUTTON;
             button_codes_copy[BTN_START].value = 9;
+#elif RASPBERRY
+            // shield, tiro, pulo, slide
+            // QUIT e START: OK
+            button_codes_copy[BTN_ATTACK].type = JOYSTICK_INPUT_TYPE_BUTTON;
+            button_codes_copy[BTN_ATTACK].value = 5;
+            button_codes_copy[BTN_JUMP].type = JOYSTICK_INPUT_TYPE_BUTTON;
+            button_codes_copy[BTN_JUMP].value = 4;
+            button_codes_copy[BTN_DASH].type = JOYSTICK_INPUT_TYPE_BUTTON;
+            button_codes_copy[BTN_DASH].value = 0;
+            button_codes_copy[BTN_SHIELD].type = JOYSTICK_INPUT_TYPE_BUTTON;
+            button_codes_copy[BTN_SHIELD].value = 1;
+            button_codes_copy[BTN_L].type = JOYSTICK_INPUT_TYPE_BUTTON;
+            button_codes_copy[BTN_L].value = 3;
+            button_codes_copy[BTN_R].type = JOYSTICK_INPUT_TYPE_BUTTON;
+            button_codes_copy[BTN_R].value = 2;
+            button_codes_copy[BTN_QUIT].type = JOYSTICK_INPUT_TYPE_BUTTON;
+            button_codes_copy[BTN_QUIT].value = 8;
+            button_codes_copy[BTN_START].type = JOYSTICK_INPUT_TYPE_BUTTON;
+            button_codes_copy[BTN_START].value = 9;
 #else
             button_codes_copy[BTN_ATTACK].type = JOYSTICK_INPUT_TYPE_BUTTON;
             button_codes_copy[BTN_ATTACK].value = 2;
@@ -258,7 +293,7 @@ namespace format_v4 {
             input_type = INPUT_TYPE_JOYSTICK;
             input_mode = INPUT_MODE_DIGITAL;
 #elif DINGUX
-            input_type = INPUT_TYPE_DOUBLE;
+            input_type = INPUT_TYPE_KEYBOARD;
             input_mode = INPUT_MODE_DIGITAL;
 #elif OPEN_PANDORA
             input_type = INPUT_TYPE_KEYBOARD;
@@ -285,6 +320,8 @@ namespace format_v4 {
             return PLATFORM_WII;
     #elif DREAMCAST
             return PLATFORM_DREAMCAST;
+    #elif RASPBERRY
+            return PLATFORM_RASPBERRY;
     #else
             return PLATFORM_WINDOWS;
     #endif

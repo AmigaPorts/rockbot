@@ -88,7 +88,7 @@ void classPlayer::initialize()
     _charged_shot_projectile_id = GameMediator::get_instance()->player_list_v3_1[_number].full_charged_projectile_id;
     _normal_shot_projectile_id = GameMediator::get_instance()->player_list_v3_1[_number].normal_shot_projectile_id;
 
-    std::cout << "classPlayer::initialize - player[" << _number << "][" << name << "], _normal_shot_projectile_id[" << _normal_shot_projectile_id << "]" << std::endl;
+    //std::cout << "classPlayer::initialize - player[" << _number << "][" << name << "], _normal_shot_projectile_id[" << _normal_shot_projectile_id << "]" << std::endl;
 
     _simultaneous_shots = GameMediator::get_instance()->player_list_v3_1[_number].simultaneous_shots;
     //std::cout << "classjump::set_acceleration - player[" << name << "], accel[" << GameMediator::get_instance()->player_list[_number].jump_gravity << "]" << std::endl;
@@ -847,6 +847,10 @@ void classPlayer::move()
 	}
 	if (input.p1_input[BTN_SHIELD] == 1) {
 		moveCommands.shield = 1;
+        moveCommands.left = 0;
+        moveCommands.right = 0;
+        moveCommands.up = 0;
+        moveCommands.down = 0;
 	} else {
 		moveCommands.shield = 0;
 	}
@@ -1000,7 +1004,7 @@ void classPlayer::reset_hp()
 
 void classPlayer::change_player_color(bool full_change)
 {
-    //std::cout << "PLAYER::change_player_color - selected_weapon: " << selected_weapon << std::endl;
+    //std::cout << "PLAYER::change_player_color - selected_weapon[" << selected_weapon << "], full_change[" << full_change << "]" << std::endl;
 	if (full_change == false) {
         graphLib.change_surface_color(0, weapon_colors[selected_weapon].color1, &(graphLib.character_graphics_list.find(name)->second).frames[state.direction][state.animation_type][state.animation_state].frameSurface);
         graphLib.change_surface_color(1, weapon_colors[selected_weapon].color2, &(graphLib.character_graphics_list.find(name)->second).frames[state.direction][state.animation_type][state.animation_state].frameSurface);

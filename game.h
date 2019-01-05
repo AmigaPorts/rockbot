@@ -80,11 +80,11 @@ public:
      * @return st_position
      */
     st_float_position checkScrolling();
-    void horizontal_screen_move(short direction, bool is_door, short tileX, short tileY);
-    /**
-     * @brief
-     *
-     */
+    void horizontal_screen_move(short direction, bool is_door, short tileX);
+
+
+    void show_door_animation();
+
     void got_weapon();
     /**
      * @brief

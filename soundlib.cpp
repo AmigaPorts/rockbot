@@ -322,7 +322,9 @@ void soundLib::play_music() {
     int res = -1;
 	// toca a música
 	if (music) {
-		if (Mix_PlayMusic(music, -1) == -1) {
+        res = Mix_PlayMusic(music, -1);
+        //std::cout << "<<<<<<<<<<<<< soundLib::play_music, res[" << res << "], error[" << Mix_GetError() << "]" << std::endl;
+        if (res == -1) {
             std::cout << "<<<<<<<<<<<<< Mix_PlayMusic Error: " << Mix_GetError() << std::endl;
 #ifdef ANDROID
         __android_log_print(ANDROID_LOG_INFO, "###ROCKBOT2###", "### Mix_PlayMusic Error[%s] ###", Mix_GetError());
@@ -335,6 +337,24 @@ void soundLib::play_music() {
 #ifdef ANDROID
         __android_log_print(ANDROID_LOG_INFO, "###ROCKBOT2###", "### SOUNDLIB::play_music - music is NULL ###");
 #endif
+    }
+}
+
+void soundLib::play_music_once()
+{
+    if (game_config.sound_enabled == false) {
+        return;
+    }
+    int res = -1;
+    if (music) {
+        res = Mix_PlayMusic(music, 1);
+        if (res == -1) {
+            std::cout << "<<<<<<<<<<<<< soundLib::play_music_once: " << Mix_GetError() << std::endl;
+        }
+        //std::cout << "SOUNDLIB::play_music" << std::endl;
+        Mix_VolumeMusic(game_config.volume_music);
+    } else {
+        std::cout << ">> soundLib::play_music_once: music is null" << std::endl;
     }
 }
 

@@ -83,38 +83,41 @@ VAPPEBOY:
 -------------------------------------------
 CRITICAL:
 -------------------------------------------
-- stage selected fanfarre
-- castle 4
-- spikebot
+- ANDROID: music playe rnot working
 
+- se tu aperta start na hora de recomeçar de um checkpoint, ele meio que para no ar
+
+- [INTERMITENT] when player is damaged, is entering inside boss-door
+
+- following projectile, when turns to zig-zag is not hitting enemy
 - Upon selecting spike's stage, game crashes on pixel2 phone
 
 - [1*] dynabot is leaving screen after using time stopper
 - [1*] crash after first castle boss (?)
 
-- boss initial position must be on ground, remove the animation of him falling from presenation
 - boss presentation must init only when boss is entirely on-screen
     # boss_move
     # if (is_on_visible_screen() && _initialized == 0 && _is_boss == true) {
 - boss must move even if out of screen, if is started
 
-- review sfx files, and remove ones deprecated or that should not be kept into memory
-- [2] clean dialogs from castle stages
-- fix falling bomb area (when there is scroll on screen): it must start ahead of enemy
+- [Rockbot2] clean dialogs from castle stages
 ===============
-- it is written "create save" when selecting slot to load
-- [2] fix lifes order
 
 
 *(can't reproduce on linux)
 -------------------------------------------
 SERIOUS:
 -------------------------------------------
+- review sfx files, and remove ones deprecated or that should not be kept into memory
+- it is written "create save" when selecting slot to load
+
+- fix falling bomb area (when there is scroll on screen): it must start ahead of enemy
 - lighting bolt must be only one time and in the closest enemy position (x and y+h)
-- EDITOR: change swap maps to replace npcs and objects with the new format, also, change weapons
 - criar trajetória de projétil:
     # 3 way horizontal
     # 2 way vertical
+
+- EDITOR: change swap maps to replace npcs and objects with the new format, also, change weapons
 - NPC spawn point must be defied by arm's cannon point from editor
 
 -------------------------------------------

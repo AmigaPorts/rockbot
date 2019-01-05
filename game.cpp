@@ -1090,16 +1090,11 @@ void game::transition_screen(Uint8 type, Uint8 map_n, short int adjust_x, classP
 }
 
 
-void game::horizontal_screen_move(short direction, bool is_door, short tileX, short tileY)
+void game::horizontal_screen_move(short direction, bool is_door, short tileX)
 {
-    int i = 0;
-    int upTile = 0;
-    int downTile = 0;
     st_float_position scroll_move;
 
     game_pause();
-
-    classMap* temp_map = loaded_stage.get_current_map();
 
     graphLib.set_screen_adjust(st_position(0, 0));
 
@@ -1127,8 +1122,10 @@ void game::horizontal_screen_move(short direction, bool is_door, short tileX, sh
     if (scroll_move.x < 0) {
         player_move_x = player_move_x * -1;
     }
-    std::cout << "player_move_x[" << player_move_x << "]" << std::endl;
     int static_scroll_x = loaded_stage.getMapScrolling().x;
+
+
+    std::cout << "player_move_x[" << player_move_x << "], move_limit[" << move_limit << "]" << std::endl;
     for (int i=0; i<move_limit; i++) {
         //loaded_stage.changeScrolling(scroll_move, false);
         loaded_stage.change_map_scroll(scroll_move, false, true);
@@ -1143,7 +1140,7 @@ void game::horizontal_screen_move(short direction, bool is_door, short tileX, sh
         // draw HUD
         draw_lib.show_hud(player1.get_current_hp(), 1, player1.get_selected_weapon(), player1.get_selected_weapon_value());
 #if defined(PC)
-        timer.delay(1);
+        timer.delay(2);
 #endif
         draw_lib.update_screen();
 
@@ -1161,6 +1158,29 @@ void game::horizontal_screen_move(short direction, bool is_door, short tileX, sh
     timer.delay(6);
     game_unpause();
     loaded_stage.add_autoscroll_delay();
+    loaded_stage.show_stage();
+}
+
+void game::show_door_animation()
+{
+    int steps = 50;
+    remove_players_slide();
+
+    for (int i=0; i<steps; i++) {
+        loaded_stage.show_stage();
+        loaded_stage.show_npcs();
+        loaded_stage.show_objects();
+        player1.show();
+        loaded_stage.showAbove();
+        // draw HUD
+        draw_lib.show_hud(player1.get_current_hp(), 1, player1.get_selected_weapon(), player1.get_selected_weapon_value());
+#if defined(PC)
+        timer.delay(2);
+#endif
+        draw_lib.update_screen();
+    }
+    timer.delay(6);
+    game_unpause();
     loaded_stage.show_stage();
 }
 
@@ -1201,6 +1221,7 @@ void game::got_weapon()
         color_list.push_back(st_color(251, 101, 101));
         soundManager.load_music(game_data.got_weapon_music_filename);
         soundManager.play_music();
+
         for (int i=0; i<2; i++) {
             for (int j=0; j<color_list.size(); j++) {
                 graphLib.clear_area(0, 0, RES_W, RES_H, color_list.at(j).r, color_list.at(j).g, color_list.at(j).b);
@@ -1221,10 +1242,8 @@ void game::got_weapon()
 		/// @TODO
 		// show the "you got" screen
 		graphLib.blank_screen();
-        soundManager.load_music(game_data.got_weapon_music_filename);
 		graphLib.blink_screen(255, 255, 255);
 		graphLib.blank_screen();
-        soundManager.play_music();
 
         graphLib.show_config_bg();
 
@@ -1454,7 +1473,7 @@ void game::quick_load_game()
     }
 
     game_save.difficulty = DIFFICULTY_HARD;
-    game_save.selected_player = PLAYER_4;
+    game_save.selected_player = PLAYER_1;
 
     /*
     // DEBUG //
@@ -1768,9 +1787,11 @@ void game::select_game_screen()
     std::vector<std::string> game_list = fio.read_game_list();
     if (game_list.size() < 1) {
         _selected_game = std::string("");
-        return;
+        std::cout << "select_game_screen [NO GAMES]" << std::endl;
+        exit(-1);
     } else if (game_list.size() == 1) {
         _selected_game = game_list.at(0);
+        std::cout << "select_game_screen [" + _selected_game + "]" << std::endl;
         return;
     }
     graphLib.show_config_bg();

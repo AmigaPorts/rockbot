@@ -126,6 +126,25 @@ void draw::preload()
     filename = FILEPATH + "images/backgrounds/castle_point.png";
     graphLib.surfaceFromFile(filename, &castle_point);
 
+    filename = GAMEPATH + "/shared/images/buttons/d_pad.png";
+    input_images_map.insert(std::pair<e_INPUT_IMAGES, graphicsLib_gSurface>(INPUT_IMAGES_DPAD_LEFTRIGHT, graphicsLib_gSurface()));
+    graphLib.surfaceFromFile(filename, &input_images_map.at(INPUT_IMAGES_DPAD_LEFTRIGHT));
+
+    filename = GAMEPATH + "/shared/images/buttons/btn_a.png";
+    input_images_map.insert(std::pair<e_INPUT_IMAGES, graphicsLib_gSurface>(INPUT_IMAGES_A, graphicsLib_gSurface()));
+    graphLib.surfaceFromFile(filename, &input_images_map.at(INPUT_IMAGES_A));
+
+    filename = GAMEPATH + "/shared/images/buttons/btn_b.png";
+    input_images_map.insert(std::pair<e_INPUT_IMAGES, graphicsLib_gSurface>(INPUT_IMAGES_B, graphicsLib_gSurface()));
+    graphLib.surfaceFromFile(filename, &input_images_map.at(INPUT_IMAGES_B));
+
+    filename = GAMEPATH + "/shared/images/buttons/btn_x.png";
+    input_images_map.insert(std::pair<e_INPUT_IMAGES, graphicsLib_gSurface>(INPUT_IMAGES_X, graphicsLib_gSurface()));
+    graphLib.surfaceFromFile(filename, &input_images_map.at(INPUT_IMAGES_X));
+
+    filename = GAMEPATH + "/shared/images/buttons/btn_y.png";
+    input_images_map.insert(std::pair<e_INPUT_IMAGES, graphicsLib_gSurface>(INPUT_IMAGES_Y, graphicsLib_gSurface()));
+    graphLib.surfaceFromFile(filename, &input_images_map.at(INPUT_IMAGES_Y));
 }
 
 void draw::show_gfx()
@@ -151,6 +170,11 @@ void draw::show_gfx()
         show_flash();
     }
     show_weapon_tooltip();
+}
+
+graphicsLib_gSurface *draw::get_input_surface(e_INPUT_IMAGES input)
+{
+    return &input_images_map.at(input);
 }
 
 void draw::update_screen()
@@ -869,6 +893,9 @@ st_float_position draw::get_radius_point(st_position center_point, int radius, f
 
 void draw::draw_castle_path(bool instant, st_position initial_point, st_position final_point)
 {
+    if (initial_point.x == 0 && initial_point.y == 0 && final_point.x == 0 && final_point.x == 0) {
+        return;
+    }
     int dist_x = initial_point.x - final_point.x;
     int dist_y = initial_point.y - final_point.y;
     int duration = CASTLE_PATH_DURATION;
@@ -1031,8 +1058,7 @@ void draw::show_hud(int hp, int player_n, int selected_weapon, int selected_weap
 
     // player HP
     int hp_percent = (100 * hp) / fio.get_heart_pieces_number(game_save);
-    graphLib.draw_text(6, 10, "HP:");
-    draw_enery_ball(hp_percent, 30, hud_player_hp_ball);
+    draw_enery_ball(hp_percent, 3, hud_player_hp_ball);
     /*
     for (int i=0; i<5; i++) {
         int min = 20*i;
@@ -1057,8 +1083,7 @@ void draw::show_hud(int hp, int player_n, int selected_weapon, int selected_weap
         hud_player_wpn_ball.change_colorkey_color(COLOR_KEY_GREEN, GameMediator::get_instance()->player_list_v3_1[PLAYER_1].weapon_colors[selected_weapon].color1);
         int wpn_percent = (100 * selected_weapon_value) / fio.get_heart_pieces_number(game_save);
         //std::cout << "selected_weapon_value[" << selected_weapon_value << "]" << std::endl;
-        graphLib.draw_text(90, 10, "WPN:");
-        draw_enery_ball(wpn_percent, 122, hud_player_wpn_ball);
+        draw_enery_ball(wpn_percent, 62, hud_player_wpn_ball);
     }
 
     // boss HP
@@ -1097,7 +1122,7 @@ void draw::draw_enery_ball(int value, int x_pos, graphicsLib_gSurface& ball_surf
             img_origin_x = ENERGY_BALL_IMG_SIZE*3;
         }
 
-        graphLib.copyArea(st_rectangle(img_origin_x, 0, ball_surface.height, ball_surface.height), st_position(x_pos+(10*i), 9), &ball_surface, &graphLib.gameScreen);
+        graphLib.copyArea(st_rectangle(img_origin_x, 0, ball_surface.height, ball_surface.height), st_position(x_pos+(10*i), 3), &ball_surface, &graphLib.gameScreen);
     }
 }
 

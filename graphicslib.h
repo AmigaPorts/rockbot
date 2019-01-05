@@ -175,6 +175,9 @@ public:
 
     void set_surface_alpha(int alpha, graphicsLib_gSurface &surface);
     void set_surface_alpha(int alpha, graphicsLib_gSurface *surface);
+
+    void set_surface_alpha_nocolorkey(int alpha, graphicsLib_gSurface &surface);
+
     struct graphicsLib_gSurface surfaceFromRegion(struct st_rectangle, struct graphicsLib_gSurface&);
     void blank_screen();
     void blank_screen(int r, int g, int b);
@@ -190,6 +193,8 @@ public:
     void draw_centered_text(short int y, std::string text, st_color font_color);
     void draw_centered_text(short int y, std::string text);
     void draw_centered_text(short int y, std::string text, struct graphicsLib_gSurface& surface, st_color temp_font_color);
+
+
     Uint8 getColorNumber(Uint8 r, Uint8 g, Uint8 b);
     void drawCursor(st_position);
     void eraseCursor(st_position);
@@ -258,6 +263,7 @@ private:
     void set_video_mode();
     void preload_images();
     void preload_anim_tiles();
+    void render_text(short int x, short int y, std::string text, st_color color, struct graphicsLib_gSurface& surface, bool centered);
 
 
 
@@ -300,6 +306,7 @@ private:
 	// TODO: free those pointers
     TTF_Font *font;
     TTF_Font *lowercase_font;
+    TTF_Font *outline_font;
 
     SDL_Surface *game_screen;									// we do not put this into a graphicsLib_gSurface because this is meant to be used only internally
     SDL_Surface *game_screen_scaled;
